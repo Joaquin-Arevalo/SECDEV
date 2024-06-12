@@ -631,7 +631,6 @@ body{
     background-color: var(--green-l); 
     transform: translateX(-50%);
     border-radius: 30px;
-
 }
 .num-input-1{
     display: flex;
