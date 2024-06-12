@@ -1,9 +1,11 @@
 
-    <div class="right-payroll right-emp-dash">
+    <div class="right-payroll right-emp-dash" style="width:10%; margin:0;">
         <div class="admin-rightdash-top">
-            <h1 style="color: var(--green-m)">Hello!</h1>
+            <h1>Hello, <span>{{emp_rec.First_Name}}</span>!</h1>
+            <p>As of <span id="date">Monday, January 1, 2024</span></p> 
+            <p id="time">00:00:00</p>
         </div>
-    <div class="ad-dash-spacer"></div>
+        <div class="ad-dash-spacer"></div>
         <div class="admin-rightdash-mid">
             <button type="button" class="ad-rightdash-btn">
                 <i class="fi fi-rr-calendar-clock"></i>

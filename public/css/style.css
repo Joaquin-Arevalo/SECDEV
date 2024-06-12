@@ -7,8 +7,9 @@ Design style for the elements of the page
 @import url('https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css');
 @import url('https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css');
 :root{
+    --green-l: #E9F6E7;
     --green-m: #86B745;
-    --green-d: #6D9243
+    --green-d: #53643F;
     --white-m: #F7F7F7;
     --darkgray-m: #262827;
     --white-hov: #E1DFDF;
@@ -17,6 +18,7 @@ Design style for the elements of the page
     --lightergray: #ACACAA;
     --green-success: #2A9349;
     --red-error: #FF0033;
+    --background: #04701C;
 }
 
 body{
@@ -25,6 +27,10 @@ body{
     flex-direction: row;
     margin: 0;
     font-family: 'Archivo', sans-serif;
+}
+.parent-div{
+    width: 100%; 
+    position: relative;
 }
 .left-emp-dash{
     width: 80vw;
@@ -154,9 +160,11 @@ body{
     cursor: pointer;
 }
 .left-payroll{
-    width: 80vw;
+    width: 95%;
     display: flex;
     flex-direction: column;
+    background-color: white;
+    padding: 1rem;
 }
 .right-payroll{
     width: 20vw;
@@ -405,7 +413,7 @@ body{
     background-color: var(--gray);
 }
 .admin-rightdash-top{
-    color: var(--white-m);
+    color: white;
     text-align: center;
 }
 .admin-rightdash-top h1{
@@ -439,31 +447,40 @@ body{
     width: 90%;
 }
 .admin-leftdash{
-    margin: 3vh 3vw 3vh 3vw;
-}
-.admin-leftdash{
-    margin: 3vh 3vw 3vh 3vw;
+    margin: 0.5vh 0.5vw 0.5vh 0.5vw;
 }
 .admin-leftdash-top h2{
     color: var(--darkgray-m);
 }
+.page-title{
+    width: 40vh;
+    height: 12vh;
+    background-color: var(--green-m);
+    text-align: center;
+    align-content: center;
+    margin-top:10px;
+    border-radius: 15px;
+    color:white;
+}
 .dropdown{
     display: flex;
-    background-color: var(--white-hov);
+    background-color: var(--green-l);
     width: 28%;
     height: 6vh;
     border-radius: 10px;
+    justify-content: center;
 }
 .dropdown p, .dropdown label{
     margin: 1vw;
     align-self: center;
+
 }
 .dropdown select{
     justify-self: flex-end;
     width: 13vw;
     font-size: 2.2vh;
-    background-color: var(--white-hov);
-    border-color: var(--white-hov);
+    background-color: var(--green-l);
+    border-color: var(--green-l);
 }
 .dropdown input {
     background-color: var(--white-hov);
@@ -477,11 +494,17 @@ body{
     height: 100%;
     margin-top: 2vw;
     border-spacing: 0;
+    font-size: smaller;
 }
 .admin-leftdash td{
     text-align: center;
     border: 1px solid var(--darkgray-m);
     padding: .5vh;
+}
+.admin-leftdash th{
+    border: 1px solid var(--darkgray-m);
+    background-color: var(--green-success);
+    color: white;
 }
 .popup .overlay{
     position: fixed;
@@ -582,11 +605,33 @@ body{
     margin: 0;
     margin-left: 2vw;    
 }
+.exportBtn{
+    align-self: center;
+    margin-bottom: 20px;
+}
+.exportBtn button{
+    width: 250px;
+    height: 30px;
+    background-color: var(--green-d);
+    color: var(--white-m);
+    border-radius: 10px;
+    border: none;
+}
 .empman-btm{
     display: flex;
     margin-top: 4vh;
     justify-content: space-between;
     width: 70%;
+    padding: 13px;
+}
+.wklyAdditional{
+    position: absolute; 
+    top:70%; 
+    left: 50%; 
+    background-color: var(--green-l); 
+    transform: translateX(-50%);
+    border-radius: 30px;
+
 }
 .num-input-1{
     display: flex;
