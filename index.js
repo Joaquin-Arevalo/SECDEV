@@ -18,7 +18,8 @@ const database = require('./models/database.js');
 const schedule = require('node-schedule');
 const axios = require('axios');
 const MongoStore = require('connect-mongo');
-
+const addData = require('./add_data.js');
+const path =require("path")
 const app = express();
 
 dotenv.config();
@@ -26,7 +27,9 @@ const port = process.env.PORT;
 const hostname = process.env.HOSTNAME;
 app.set('view engine', 'hbs');
 
-hbs.registerPartials(__dirname + '/views/partials')
+const partialsPath = path.join(__dirname, "views/partials");
+hbs.registerPartials(partialsPath);
+
 hbs.registerHelper('eq', function (a, b){
     return a === b;
 });
@@ -66,6 +69,7 @@ app.use(function(req, res){
     res.status(404).send('Error 404: Page Not Found');
 });
 
+// addData.populateEmployees();
 app.listen(port, hostname, function() {
     console.log(`Server running at http://${hostname}:${port}`);
 });
