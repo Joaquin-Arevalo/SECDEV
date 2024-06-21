@@ -20,7 +20,7 @@ describe('Login Page', () => {
   });
 
   //login witoout password 
-  it('login without username', () => {
+  it('login without password', () => {
     // Enter invalid username/email and password
     cy.get('#email').type('invalid_user');
     cy.get('#password').type('');
