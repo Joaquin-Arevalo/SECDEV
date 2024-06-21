@@ -6,6 +6,32 @@ describe('Login Page', () => {
     cy.visit('http://localhost:3000');
 })
 
+  //login witoout email and password 
+  it('login without username', () => {
+    // Enter invalid username/email and password
+    cy.get('#email').type('');
+    cy.get('#password').type('');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+    
+    // Assert that the error message is displayed
+    cy.get('#error_issue').should('be.visible').and('contain', 'Username is Required!');
+  });
+
+  //login witoout password 
+  it('login without username', () => {
+    // Enter invalid username/email and password
+    cy.get('#email').type('invalid_user');
+    cy.get('#password').type('');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+    
+    // Assert that the error message is displayed
+    cy.get('#error_issue').should('be.visible').and('contain', 'Password is Required!');
+  });
+
   //log in using incorrect credentials
   it('Invalid login', () => {
     // Enter invalid username/email and password
@@ -55,6 +81,7 @@ describe('Login Page', () => {
 
     // Assert that the login button is not visible
     cy.get('#login-button').should('not.exist');
+    cy.get('#time').should('be.visible');
   })
 
   it('Successful logout', () => {
@@ -69,7 +96,8 @@ describe('Login Page', () => {
     cy.get('h2 > a').click();       ///click on the logout button (s)
 
     // Assert that the login button is not visible
-    cy.get('#logout-button').should('not.exist');
+    cy.get('h2 > a').should('not.exist');
+    cy.get('#login-button').should('be.visible');
   })
 
   
