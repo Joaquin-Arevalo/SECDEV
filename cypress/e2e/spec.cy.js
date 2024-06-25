@@ -71,9 +71,35 @@ describe('Login testing', () => {
     cy.get('#forgot-password-form').should('not.exist');
   });
 
-  it('Successful login', () => {
+  it('Successful login (Work from Home)', () => {
+    // Enter valid username/email and password
+    cy.get('#email').type('alice.johnson@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Assert that the login button is not visible
+    cy.get('#login-button').should('not.exist');
+    cy.get('#time').should('be.visible');
+  })
+
+  it('Successful login (employee)', () => {
     // Enter valid username/email and password
     cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Assert that the login button is not visible
+    cy.get('#login-button').should('not.exist');
+    cy.get('#time').should('be.visible');
+  })
+
+  it('Successful login (Admin)', () => {
+    // Enter valid username/email and password
+    cy.get('#email').type('jane.smith@example.com');
     cy.get('#password').type('password123');
     
     // Click the login button
@@ -108,7 +134,7 @@ describe('User Story #3', () => {
     cy.visit('http://localhost:3000');
   })
   it('Current Week', () => {
-    // Enter valid username/email and password
+    // Enter employee username/email and password
     cy.get('#email').type('john.doe@example.com');
     cy.get('#password').type('password123');
     
@@ -116,7 +142,7 @@ describe('User Story #3', () => {
     cy.get('#login-button').click();
 
     // Click the employee dashboard button
-    cy.get(':nth-child(2) > p > a').click();       ///click on the employee dashboard button (s)
+    cy.get(':nth-child(2) > p > a').click();       
 
     // select current Week
     cy.get('#emp-dropdown-week-id').select('Current Week'); 
@@ -125,7 +151,7 @@ describe('User Story #3', () => {
   })
 
   it('Last Week', () => {
-    // Enter valid username/email and password
+    // Enter employee username/email and password
     cy.get('#email').type('john.doe@example.com');
     cy.get('#password').type('password123');
     
@@ -133,7 +159,7 @@ describe('User Story #3', () => {
     cy.get('#login-button').click();
 
     // Click the employee dashboard button
-    cy.get(':nth-child(2) > p > a').click();       ///click on the employee dashboard button (s)
+    cy.get(':nth-child(2) > p > a').click();       
 
     // select Last Week
     cy.get('#emp-dropdown-week-id').select('Last Week'); 
@@ -142,7 +168,7 @@ describe('User Story #3', () => {
   })
 
   it('2 Weeks Ago', () => {
-    // Enter valid username/email and password
+    // Enter employee username/email and password
     cy.get('#email').type('john.doe@example.com');
     cy.get('#password').type('password123');
     
@@ -150,7 +176,7 @@ describe('User Story #3', () => {
     cy.get('#login-button').click();
 
     // Click the employee dashboard button
-    cy.get(':nth-child(2) > p > a').click();       ///click on the employee dashboard button (s)
+    cy.get(':nth-child(2) > p > a').click();       
 
     // select 2 Weeks Ago
     cy.get('#emp-dropdown-week-id').select('2 Weeks Ago'); 
@@ -166,8 +192,8 @@ describe('User Story #4', () => {
     cy.visit('http://localhost:3000');
   })
 
-  it('Late Arrivals Column is visible', () => {
-    // Enter valid username/email and password
+  it('Late Arrival Hours Column is visible', () => {
+    // Enter employee username/email and password
     cy.get('#email').type('john.doe@example.com');
     cy.get('#password').type('password123');
     
@@ -175,7 +201,7 @@ describe('User Story #4', () => {
     cy.get('#login-button').click();
 
     // Click the employee dashboard button
-    cy.get(':nth-child(2) > p > a').click();       ///click on the employee dashboard button (s)
+    cy.get(':nth-child(2) > p > a').click();       
 
     // select current Week
     cy.get('#emp-dropdown-week-id').select('Current Week'); 
@@ -185,4 +211,179 @@ describe('User Story #4', () => {
       cy.get(`:nth-child(${i}) > :nth-child(11)`).should('be.visible');
     }  
   })
+
+  it('Late Arrival Deduction Column is visible', () => {
+    // Enter employee username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();    
+
+    // select current Week
+    cy.get('#emp-dropdown-week-id').select('Current Week'); 
+
+    // Assert that the Late Arrivals is visible
+    for (let i = 1; i <= 8; i++) {
+      cy.get(`:nth-child(${i}) > :nth-child(11)`).should('be.visible');
+    }  
+  })
+
+  it('Total Deductions is visible', () => {
+    // Enter employee username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();       
+
+    // select current Week
+    cy.get('#emp-dropdown-week-id').select('Current Week'); 
+
+    // Assert that the Total Deduction is visible
+    cy.get('.num-input-1 > :nth-child(3)').should('be.visible');
+  })
 });
+
+
+describe('User Story #5', () => {
+
+  beforeEach(() => {
+    cy.visit('http://localhost:3000');
+  })
+
+  it('Overtime Hours Column is visible', () => {
+    // Enter employee username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();   
+
+    // select current Week
+    cy.get('#emp-dropdown-week-id').select('Current Week'); 
+
+    // Assert that the Overtime Hours column is visible
+    for (let i = 1; i <= 8; i++) {
+      cy.get(`:nth-child(${i}) > :nth-child(9)`).should('be.visible');
+    }  
+  })
+
+  it('Compensation Column is visible', () => {
+    // Enter employee username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();     
+
+    // select current Week
+    cy.get('#emp-dropdown-week-id').select('Current Week'); 
+
+    // Assert that the Compensation column is visible
+    for (let i = 1; i <= 8; i++) {
+      cy.get(`:nth-child(${i}) > :nth-child(10)`).should('be.visible');
+    }  
+  })
+  
+  it('Total Compensation (Additional) is visible', () => {
+    // Enter employee username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();    
+
+    // select current Week
+    cy.get('#emp-dropdown-week-id').select('Current Week'); 
+
+    // Assert that the Total Deduction is visible
+    cy.get('.num-input-1 > :nth-child(1)').should('be.visible');
+  })
+});
+
+
+describe('User Story #7', () => {
+
+  beforeEach(() => {
+    cy.visit('http://localhost:3000');
+  })
+
+  it('Holiday  visible', () => {
+    // Enter employee username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();
+
+    // select current Week
+    cy.get('#emp-dropdown-week-id').select('Current Week'); 
+  })
+})
+
+
+describe('User Story #9', () => {
+
+  beforeEach(() => {
+    cy.visit('http://localhost:3000');
+  })
+
+  it('Export Button is visible', () => {
+    // Enter employee username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();    
+
+    // select current Week
+    cy.get('#emp-dropdown-week-id').select('Current Week'); 
+
+    cy.get('.exportBtn > button').should('be.visible');
+  })
+})
+
+
+describe('User Story #11', () => {
+
+  beforeEach(() => {
+    cy.visit('http://localhost:3000');
+  })
+
+  it('Total Tax Deduction is visible', () => {
+    // Enter employee username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+  
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the Tax Deduction dashboard button
+    cy.get(':nth-child(3) > p > a').click();    
+
+    // Assert that the Weekly Pay is visible
+    cy.get('[style="width:45%"] > h2').should('not.exist');
+  })
+})
