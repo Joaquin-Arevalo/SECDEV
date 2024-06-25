@@ -92,8 +92,8 @@ describe('Login testing', () => {
     // Click the login button
     cy.get('#login-button').click();
 
-    // Click the login button
-    cy.get('h2 > a').click();       ///click on the logout button (s)
+    // Click the logout button
+    cy.get('h2 > a').click();      
 
     // Assert that the login button is not visible
     cy.get('h2 > a').should('not.exist');
@@ -107,8 +107,7 @@ describe('User Story #3', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000');
   })
-
-  it('User can view Weekly Pay', () => {
+  it('Current Week', () => {
     // Enter valid username/email and password
     cy.get('#email').type('john.doe@example.com');
     cy.get('#password').type('password123');
@@ -116,10 +115,74 @@ describe('User Story #3', () => {
     // Click the login button
     cy.get('#login-button').click();
 
-    // Click the login button
-    cy.get(':nth-child(2) > p > a').click();       ///click on the logout button (s)
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();       ///click on the employee dashboard button (s)
 
+    // select current Week
+    cy.get('#emp-dropdown-week-id').select('Current Week'); 
     // Assert that the Weekly Pay is visible
     cy.get('[style="width:45%"] > h2').should('be.visible');
+  })
+
+  it('Last Week', () => {
+    // Enter valid username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();       ///click on the employee dashboard button (s)
+
+    // select Last Week
+    cy.get('#emp-dropdown-week-id').select('Last Week'); 
+    // Assert that the Weekly Pay is visible
+    cy.get('[style="width:45%"] > h2').should('be.visible');
+  })
+
+  it('2 Weeks Ago', () => {
+    // Enter valid username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();       ///click on the employee dashboard button (s)
+
+    // select 2 Weeks Ago
+    cy.get('#emp-dropdown-week-id').select('2 Weeks Ago'); 
+    // Assert that the Weekly Pay is visible
+    cy.get('[style="width:45%"] > h2').should('be.visible');
+  })
+});
+
+
+describe('User Story #4', () => {
+
+  beforeEach(() => {
+    cy.visit('http://localhost:3000');
+  })
+
+  it('Late Arrivals Column is visible', () => {
+    // Enter valid username/email and password
+    cy.get('#email').type('john.doe@example.com');
+    cy.get('#password').type('password123');
+    
+    // Click the login button
+    cy.get('#login-button').click();
+
+    // Click the employee dashboard button
+    cy.get(':nth-child(2) > p > a').click();       ///click on the employee dashboard button (s)
+
+    // select current Week
+    cy.get('#emp-dropdown-week-id').select('Current Week'); 
+
+    // Assert that the Late Arrivals is visible
+    for (let i = 1; i <= 8; i++) {
+      cy.get(`:nth-child(${i}) > :nth-child(11)`).should('be.visible');
+    }  
   })
 });
