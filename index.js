@@ -19,6 +19,7 @@ const schedule = require('node-schedule');
 const axios = require('axios');
 const MongoStore = require('connect-mongo');
 const addData = require('./add_data.js');
+const addDataPayroll = require('./add_data_payroll.js');
 const path =require("path")
 const app = express();
 
@@ -70,6 +71,7 @@ app.use(function(req, res){
 });
 
 // addData.populateEmployees();
+// addDataPayroll.populate_payroll();
 app.listen(port, hostname, function() {
     console.log(`Server running at http://${hostname}:${port}`);
-});
+}); 

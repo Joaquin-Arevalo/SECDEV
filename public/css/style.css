@@ -622,16 +622,6 @@ body{
     margin-top: 4vh;
     justify-content: space-between;
     width: 70%;
-    padding: 13px;
-}
-.wklyAdditional{
-    position: absolute; 
-    top:70%; 
-    left: 50%; 
-    background-color: var(--green-l); 
-    transform: translateX(-50%);
-    border-radius: 30px;
-
 }
 .num-input-1{
     display: flex;
