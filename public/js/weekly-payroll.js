@@ -18,13 +18,14 @@ document.addEventListener("DOMContentLoaded", function(){
     })
     .then(html =>{
         document.body.innerHTML = html; 
-        document.getElementById("select-week-dropdown-id").style.visibility = "hidden";
+        //document.getElementById("select-week-dropdown-id").style.visibility = "hidden";
         dropdown();
 
     })
     .catch(error =>{
         console.error('Error fetching /admin_retrieve_employee_total_wp:', error);
     });
+    
 });
 
 
@@ -33,7 +34,7 @@ function padZero(number) {
 }
 
 function dropdown(){
-    var emp_mgm_page_select = document.getElementById("emp-mgm-page-id"); 
+    //var emp_mgm_page_select = document.getElementById("emp-mgm-page-id"); 
     const Ti_To_logs_btn = document.getElementById("Ti-To-logs-id");
     var emp_dropdown_select = document.getElementById("emp-dropdown-id");
     var payroll_id = document.querySelector('input[name="payroll-id"]').value;
@@ -94,15 +95,15 @@ function dropdown(){
         }
     })
 
-    emp_mgm_page_select.addEventListener('change', function(){
-        const selected_page = emp_mgm_page_select.value;
+    // emp_mgm_page_select.addEventListener('change', function(){
+    //     const selected_page = emp_mgm_page_select.value;
 
-        if(selected_page === "Attendance Records"){
-            window.location.href = '/admin_empman_attendrecs';
-        }else if(selected_page === "Employee Information"){
-            window.location.href = '/admin_empman_emprecs';
-        }
-    })
+    //     if(selected_page === "Attendance Records"){
+    //         window.location.href = '/admin_empman_attendrecs';
+    //     }else if(selected_page === "Employee Information"){
+    //         window.location.href = '/admin_empman_emprecs';
+    //     }
+    // })
 
     Ti_To_logs_btn.addEventListener('click', redirect_to_logs);
     async function redirect_to_logs(event){
@@ -112,7 +113,7 @@ function dropdown(){
     }
 
     emp_dropdown_select.addEventListener('change', function(){
-        document.getElementById("select-week-dropdown-id").style.visibility = "visible";
+        //document.getElementById("select-week-dropdown-id").style.visibility = "visible";
         document.getElementById("current-week-option").innerHTML = "Select Week";
     })
 
