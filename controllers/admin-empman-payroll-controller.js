@@ -100,26 +100,45 @@ const admin_empman_payroll_controller = {
         const {PPH, PPM, Additional, Advance, Deduction, Payroll_ID, cur_email, cur_week} = req.body;
         const upd_pay = await database.findOne(payroll, {_id: Payroll_ID});
 
-        var mon_t_pay = upd_pay.Mon_Total_Pay;
-        var tue_t_pay = upd_pay.Tue_Total_Pay;
-        var wed_t_pay = upd_pay.Wed_Total_Pay;
-        var thu_t_pay = upd_pay.Thu_Total_Pay;
-        var fri_t_pay = upd_pay.Fri_Total_Pay;
-        var sat_t_pay = upd_pay.Sat_Total_Pay;
-        var sun_t_pay = upd_pay.Sun_Total_Pay;
+        const calculatePayComponents = (hours, minutes, lateHours, otHours) => {
+            const regularPay = (hours * PPH) + (minutes * PPM);
+            const lateDeduction = lateHours * PPH;
+            const overtimeRate = PPH * 1.5;
+            const overtimePay = otHours * overtimeRate;
+            const totalPay = regularPay + overtimePay - lateDeduction;
+            return { totalPay, overtimePay, lateDeduction };
+        };
 
-        if(Additional === false && Advance === false && Deduction === false){
-            mon_t_pay = (upd_pay.Mon_Hours * PPH) + (upd_pay.Mon_Minutes * PPM);
-            tue_t_pay = (upd_pay.Tue_Hours * PPH) + (upd_pay.Tue_Minutes * PPM);
-            wed_t_pay = (upd_pay.Wed_Hours * PPH) + (upd_pay.Wed_Minutes * PPM);
-            thu_t_pay = (upd_pay.Thu_Hours * PPH) + (upd_pay.Thu_Minutes * PPM);
-            fri_t_pay = (upd_pay.Fri_Hours * PPH) + (upd_pay.Fri_Minutes * PPM);
-            sat_t_pay = (upd_pay.Sat_Hours * PPH) + (upd_pay.Sat_Minutes * PPM);
-            sun_t_pay = (upd_pay.Sun_Hours * PPH) + (upd_pay.Sun_Minutes * PPM);
-        }
+        const mon_pay = calculatePayComponents(upd_pay.Mon_Hours, upd_pay.Mon_Minutes, upd_pay.Mon_Late_Hours, upd_pay.Mon_OT_Hours);
+        const tue_pay = calculatePayComponents(upd_pay.Tue_Hours, upd_pay.Tue_Minutes, upd_pay.Tue_Late_Hours, upd_pay.Tue_OT_Hours);
+        const wed_pay = calculatePayComponents(upd_pay.Wed_Hours, upd_pay.Wed_Minutes, upd_pay.Wed_Late_Hours, upd_pay.Wed_OT_Hours);
+        const thu_pay = calculatePayComponents(upd_pay.Thu_Hours, upd_pay.Thu_Minutes, upd_pay.Thu_Late_Hours, upd_pay.Thu_OT_Hours);
+        const fri_pay = calculatePayComponents(upd_pay.Fri_Hours, upd_pay.Fri_Minutes, upd_pay.Fri_Late_Hours, upd_pay.Fri_OT_Hours);
+        const sat_pay = calculatePayComponents(upd_pay.Sat_Hours, upd_pay.Sat_Minutes, upd_pay.Sat_Late_Hours, upd_pay.Sat_OT_Hours);
+        const sun_pay = calculatePayComponents(upd_pay.Sun_Hours, upd_pay.Sun_Minutes, upd_pay.Sun_Late_Hours, upd_pay.Sun_OT_Hours);
 
-        var weekly_pay_total = mon_t_pay + tue_t_pay + wed_t_pay + 
-            thu_t_pay + fri_t_pay + sat_t_pay;
+        // var mon_t_pay = upd_pay.Mon_Total_Pay;
+        // var tue_t_pay = upd_pay.Tue_Total_Pay;
+        // var wed_t_pay = upd_pay.Wed_Total_Pay;
+        // var thu_t_pay = upd_pay.Thu_Total_Pay;
+        // var fri_t_pay = upd_pay.Fri_Total_Pay;
+        // var sat_t_pay = upd_pay.Sat_Total_Pay;
+        // var sun_t_pay = upd_pay.Sun_Total_Pay;
+
+        // if(Additional === false && Advance === false && Deduction === false){
+        //     mon_t_pay = (upd_pay.Mon_Hours * PPH) + (upd_pay.Mon_Minutes * PPM);
+        //     tue_t_pay = (upd_pay.Tue_Hours * PPH) + (upd_pay.Tue_Minutes * PPM);
+        //     wed_t_pay = (upd_pay.Wed_Hours * PPH) + (upd_pay.Wed_Minutes * PPM);
+        //     thu_t_pay = (upd_pay.Thu_Hours * PPH) + (upd_pay.Thu_Minutes * PPM);
+        //     fri_t_pay = (upd_pay.Fri_Hours * PPH) + (upd_pay.Fri_Minutes * PPM);
+        //     sat_t_pay = (upd_pay.Sat_Hours * PPH) + (upd_pay.Sat_Minutes * PPM);
+        //     sun_t_pay = (upd_pay.Sun_Hours * PPH) + (upd_pay.Sun_Minutes * PPM);
+        // }
+
+        // var weekly_pay_total = mon_t_pay + tue_t_pay + wed_t_pay + 
+        //     thu_t_pay + fri_t_pay + sat_t_pay + sun_t_pay;
+
+        let weekly_pay_total = mon_pay.totalPay + tue_pay.totalPay + wed_pay.totalPay + thu_pay.totalPay + fri_pay.totalPay + sat_pay.totalPay + sun_pay.totalPay;
 
         var add;
         var adv;
@@ -156,13 +175,27 @@ const admin_empman_payroll_controller = {
                     Weekly_Total_Additional: add,
                     Weekly_Total_Advance: adv,
                     Weekly_Total_Deduction: ded,
-                    Mon_Total_Pay: mon_t_pay,
-                    Tue_Total_Pay: tue_t_pay,
-                    Wed_Total_Pay: wed_t_pay,
-                    Thu_Total_Pay: thu_t_pay,
-                    Fri_Total_Pay: fri_t_pay,
-                    Sat_Total_Pay: sat_t_pay,
-                    Sun_Total_Pay: sun_t_pay,
+                    Mon_Total_Pay: mon_pay.totalPay,
+                    Mon_OT_Compensation: mon_pay.overtimePay,
+                    Mon_Late_Deduction: mon_pay.lateDeduction,
+                    Tue_Total_Pay: tue_pay.totalPay,
+                    Tue_OT_Compensation: tue_pay.overtimePay,
+                    Tue_Late_Deduction: tue_pay.lateDeduction,
+                    Wed_Total_Pay: wed_pay.totalPay,
+                    Wed_OT_Compensation: wed_pay.overtimePay,
+                    Wed_Late_Deduction: wed_pay.lateDeduction,
+                    Thu_Total_Pay: thu_pay.totalPay,
+                    Thu_OT_Compensation: thu_pay.overtimePay,
+                    Thu_Late_Deduction: thu_pay.lateDeduction,
+                    Fri_Total_Pay: fri_pay.totalPay,
+                    Fri_OT_Compensation: fri_pay.overtimePay,
+                    Fri_Late_Deduction: fri_pay.lateDeduction,
+                    Sat_Total_Pay: sat_pay.totalPay,
+                    Sat_OT_Compensation: sat_pay.overtimePay,
+                    Sat_Late_Deduction: sat_pay.lateDeduction,
+                    Sun_Total_Pay: sun_pay.totalPay,
+                    Sun_OT_Compensation: sun_pay.overtimePay,
+                    Sun_Late_Deduction: sun_pay.lateDeduction,
                     Weekly_Hourly_Rate: PPH,
                 }
             });

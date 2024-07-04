@@ -30,6 +30,18 @@ var payroll_schema = new mongoose.Schema({
     Mon_Minutes: { 
         type: Number,
     },
+    Mon_OT_Hours: { 
+        type: Number,
+    },
+    Mon_OT_Compensation: { 
+        type: Number,
+    },
+    Mon_Late_Hours: { 
+        type: Number,
+    },
+    Mon_Late_Deduction: { 
+        type: Number,
+    },
     Mon_Total_Pay: { 
         type: Number,
     },
@@ -38,7 +50,7 @@ var payroll_schema = new mongoose.Schema({
     },
     
     Tue_Time_In: { 
-        type: String
+        type: String 
     },
     Tue_Time_Out: { 
         type: String
@@ -47,6 +59,18 @@ var payroll_schema = new mongoose.Schema({
         type: Number,
     },
     Tue_Minutes: { 
+        type: Number,
+    },
+    Tue_OT_Hours: { 
+        type: Number,
+    },
+    Tue_OT_Compensation: { 
+        type: Number,
+    },
+    Tue_Late_Hours: { 
+        type: Number,
+    },
+    Tue_Late_Deduction: { 
         type: Number,
     },
     Tue_Total_Pay: { 
@@ -68,6 +92,18 @@ var payroll_schema = new mongoose.Schema({
     Wed_Minutes: { 
         type: Number,
     },
+    Wed_OT_Hours: { 
+        type: Number,
+    },
+    Wed_OT_Compensation: { 
+        type: Number,
+    },
+    Wed_Late_Hours: { 
+        type: Number,
+    },
+    Wed_Late_Deduction: { 
+        type: Number,
+    },
     Wed_Total_Pay: { 
         type: Number,
     },
@@ -85,6 +121,18 @@ var payroll_schema = new mongoose.Schema({
         type: Number,
     },
     Thu_Minutes: { 
+        type: Number,
+    },
+    Thu_OT_Hours: { 
+        type: Number,
+    },
+    Thu_OT_Compensation: { 
+        type: Number,
+    },
+    Thu_Late_Hours: { 
+        type: Number,
+    },
+    Thu_Late_Deduction: { 
         type: Number,
     },
     Thu_Total_Pay: { 
@@ -106,6 +154,18 @@ var payroll_schema = new mongoose.Schema({
     Fri_Minutes: { 
         type: Number,
     },
+    Fri_OT_Hours: { 
+        type: Number,
+    },
+    Fri_OT_Compensation: { 
+        type: Number,
+    },
+    Fri_Late_Hours: { 
+        type: Number,
+    },
+    Fri_Late_Deduction: { 
+        type: Number,
+    },
     Fri_Total_Pay: { 
         type: Number,
     },
@@ -125,6 +185,18 @@ var payroll_schema = new mongoose.Schema({
     Sat_Minutes: { 
         type: Number,
     },
+    Sat_OT_Hours: { 
+        type: Number,
+    },
+    Sat_OT_Compensation: { 
+        type: Number,
+    },
+    Sat_Late_Hours: { 
+        type: Number,
+    },
+    Sat_Late_Deduction: { 
+        type: Number,
+    },
     Sat_Total_Pay: { 
         type: Number,
     },
@@ -142,6 +214,18 @@ var payroll_schema = new mongoose.Schema({
         type: Number,
     },
     Sun_Minutes: { 
+        type: Number,
+    },
+    Sun_OT_Hours: { 
+        type: Number,
+    },
+    Sun_OT_Compensation: { 
+        type: Number,
+    },
+    Sun_Late_Hours: { 
+        type: Number,
+    },
+    Sun_Late_Deduction: { 
         type: Number,
     },
     Sun_Total_Pay: { 
