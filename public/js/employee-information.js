@@ -42,6 +42,10 @@ function displayInfo(){
     .then(html => {
         document.body.innerHTML = html;
         document.getElementById("current-emp-option").innerHTML = curr_emp;
+        document.getElementById('weekly-payroll').addEventListener('click', function() {
+            window.location.href = 'admin_empman_payroll';
+            console.log('Clicked');
+        });
     })
     .catch(error => {
         console.error('Error fetching /display_specific_employee_records', error);
