@@ -7,7 +7,7 @@ Design style for the elements of the page
 @import url('https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css');
 @import url('https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css');
 :root{
-    --green-l: #E9F6E7;
+    --green-l: #e1f8de;
     --green-m: #86B745;
     --green-d: #53643F;
     --white-m: #F7F7F7;
@@ -267,6 +267,11 @@ body{
 .pay-per p{
     margin: 0;
 }
+.total-wkly-pay{
+    padding-top: 2vw;
+    align-self: center;
+    color: var(--green-success);
+}
 .weekly-total{
     width: 25%;
 }
@@ -450,7 +455,11 @@ body{
     margin: 0.5vh 0.5vw 0.5vh 0.5vw;
 }
 .admin-leftdash-top h2{
-    color: var(--darkgray-m);
+    color: var(--white-m);
+}
+.title-container{
+    display: flex;
+    flex-wrap: wrap;
 }
 .page-title{
     width: 40vh;
@@ -461,6 +470,9 @@ body{
     margin-top:10px;
     border-radius: 15px;
     color:white;
+}
+.title-wrapper{
+    border: solid 1px black;
 }
 .dropdown{
     display: flex;
@@ -512,13 +524,13 @@ body{
     left: 0;
     width: 100vw;
     height: 100vw;
-    z-index: 1;
     background: rgba(0, 0, 0, 0.7);
     display: none;
+    z-index: 2;
 }
 .popup .content{
     position: absolute;
-    top: 50%;
+    top: 25%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
     background: #fff;
@@ -598,7 +610,6 @@ body{
 }
 .num-input{
     display: flex;
-    margin-top: 5vh;
     flex-direction: row;
 }
 .num-input p{
@@ -632,10 +643,19 @@ body{
     transform: translateX(-50%);
     border-radius: 30px;
 }
+.wklyAdditional-admin{
+    background-color: var(--green-l); 
+    border-radius: 30px;
+    width:90%;
+    padding: 0px 18px 3px 18px;
+    align-self: center;
+}
 .num-input-1{
     display: flex;
-    flex-direction: column;
-    width: 20vw;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0px 18px 3px 18px;
 }
 .num-input-1 p{
     margin-bottom: 2vh;
@@ -669,11 +689,23 @@ body{
     padding: 3vh 3vh 3vh 3vh;
     background-color: var(--white-m);
 }
+.container{
+    width: 94%;
+    height: 100%;
+    background-color: var(--white-m);
+    padding: 5vh 5vh 0 5vh;
+    z-index: 1;
+}
 .emp-info{
     display: flex;
-    width: 100%;
-    margin-top: 5vh;
+    flex-direction: column;
+    width: 95%;
+    padding: 5vh 5vh 5vh 5vh;
+    margin-left: 0;
     font-size: 2.5vh;
+    background-color: var(--green-l);
+    border-radius: 15px;
+    border: 1px var(--green-d) solid;
 }
 .emp-info div{
     width: 100%;
@@ -690,7 +722,7 @@ body{
 .ad-left-btn{
     display: flex;
     width: 100%;
-    margin-top: 20vh;
+    margin-top: 1vh;
     justify-content: center;
     align-items: flex-end;
 }
