@@ -762,3 +762,47 @@ body{
 .sel-week{
     width: 23vw;
 }
+
+.salary-container {
+    display: flex;
+    flex-direction: column;
+}
+.salary-par-date {
+    margin-top: 12px;
+    margin-left: 10%;
+}
+.salary-par-box {
+    width: 80%;
+    height: 70%;
+    background-color: #E9F6E7;
+    border-radius: 6%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #7CA84A;
+    margin: auto;
+    display: flex;
+}
+
+.salary-pars-table {
+    align-items: center;
+    width: 100%;
+    margin-left: 10px;
+
+}
+.salary-pars-table th, td{
+     text-align: center;
+}
+.printBtn {
+    display: flex;
+    margin: auto;
+}
+.printBtn button{
+    align-items: center;
+    background-color: #7CA84A;
+    color: white;
+    padding: 10px;
+    width: 70px;
+    border-radius: 30%;
+    border-color: #7CA84A;
+    border-style: solid;
+}
