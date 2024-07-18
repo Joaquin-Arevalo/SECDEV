@@ -19,6 +19,10 @@ const forgot_password_controllers = require('../controllers/forgot-password-cont
 const admin_notifs_controllers = require('../controllers/admin-notifs-controller');
 
 const register_controllers = require('../controllers/register-controller');
+
+//for salary particulars page
+const employee_salary_particulars_controllers = require('../controllers/employee-salary-particulars-controller.js');
+
  
 const express = require('express');
 const app = express();
@@ -121,5 +125,8 @@ app.get('/display_forgot_password', initial_process, admin_access, admin_notifs_
 app.post('/delete_forgot_password', initial_process, admin_access, forgot_password_controllers.post_delete_forgot_password);
 
 app.post('/update_employee_payroll', update_payroll_controllers.post_update_employee_payroll);
+
+//for emp salary particulars
+app.get('/salary_particulars', employee_salary_particulars_controllers.get_salary_particulars);
 
 module.exports = app;
