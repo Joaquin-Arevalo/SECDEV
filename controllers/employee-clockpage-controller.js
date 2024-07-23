@@ -112,11 +112,27 @@ const employee_clockpage_controller = {
         const mr = (hr/60).toFixed(2);
         const TI_weekdayIndex = day.Time_In_Weekday_Index;
 
+        //++
+        const start_of_regular_time = 8 * 60;
+        const end_of_regular_time = 17 * 60;
+        //--
+
         if(TI_weekdayIndex === 1){
             let [hours, minutes] = day.Mon_Time_In.split(':');
             const TI_hour = parseInt(hours);
             const TI_minute = parseInt(minutes);
             const time_in_total_minutes = TI_hour * 60 + TI_minute;
+
+            //++
+            let late_penalty = 0;
+            let late_hours = 0;
+            if (time_in_total_minutes > start_of_regular_time) {
+                const late_minutes = time_in_total_minutes - start_of_regular_time;
+                late_hours = Math.ceil(late_minutes / 60); 
+                late_penalty = late_hours * hr;
+            }
+            //--
+
             var time_out_total_minutes;
             if(TI_weekdayIndex !== TO_weekdayIndex){
                 time_out_total_minutes = 23 * 60 + 59;
@@ -132,8 +148,28 @@ const employee_clockpage_controller = {
             const total_hours = Math.floor(total_time / 60);
             const total_minutes = total_time % 60;
 
-            const total_day_pay = total_hours*hr + total_minutes*mr;
+            //++
+            const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
+            const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
+    
+            
+            const regular_hours = Math.floor(regular_time / 60);
+            const regular_minutes = regular_time % 60;
+            const regular_pay = regular_hours * hr + regular_minutes * mr;
+    
+            
+            const overtime_hours = Math.floor(overtime / 60);
+            const overtime_minutes = overtime % 60;
+            const overtime_rate = hr * 1.5;
+            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
+    
+            
+            const total_day_pay = regular_pay + overtime_pay - late_penalty;
             const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            //--
+
+            // const total_day_pay = total_hours*hr + total_minutes*mr;
+            // const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
 
             try{
                 await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
@@ -142,7 +178,11 @@ const employee_clockpage_controller = {
                         Mon_Hours: total_hours,
                         Mon_Minutes: total_minutes,
                         Mon_Total_Pay: total_day_pay,
-                        Weekly_Total_Pay: Weekly_Pay
+                        Weekly_Total_Pay: Weekly_Pay,
+                        Mon_OT_Hours: overtime_hours,
+                        Mon_OT_Compensation: overtime_pay,
+                        Mon_Late_Hours: late_hours,
+                        Mon_Late_Deduction: late_penalty
                     }
                 });
                 if(current_employee.Employee_Type === "Employee"){
@@ -161,6 +201,17 @@ const employee_clockpage_controller = {
             const TI_hour = parseInt(hours);
             const TI_minute = parseInt(minutes);
             const time_in_total_minutes = TI_hour * 60 + TI_minute;
+
+            //++
+            let late_penalty = 0;
+            let late_hours = 0;
+            if (time_in_total_minutes > start_of_regular_time) {
+                const late_minutes = time_in_total_minutes - start_of_regular_time;
+                late_hours = Math.ceil(late_minutes / 60); 
+                late_penalty = late_hours * hr;
+            }
+            //--
+
             var time_out_total_minutes;
             if(TI_weekdayIndex !== TO_weekdayIndex){
                 time_out_total_minutes = 23 * 60 + 59;
@@ -176,8 +227,25 @@ const employee_clockpage_controller = {
             const total_hours = Math.floor(total_time / 60);
             const total_minutes = total_time % 60;
 
-            const total_day_pay = total_hours*hr + total_minutes*mr;
+            //++
+            const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
+            const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
+    
+            
+            const regular_hours = Math.floor(regular_time / 60);
+            const regular_minutes = regular_time % 60;
+            const regular_pay = regular_hours * hr + regular_minutes * mr;
+    
+            
+            const overtime_hours = Math.floor(overtime / 60);
+            const overtime_minutes = overtime % 60;
+            const overtime_rate = hr * 1.5;
+            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
+    
+            
+            const total_day_pay = regular_pay + overtime_pay - late_penalty;
             const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            //--
 
             try{
                 await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
@@ -186,7 +254,11 @@ const employee_clockpage_controller = {
                         Tue_Hours: total_hours,
                         Tue_Minutes: total_minutes,
                         Tue_Total_Pay: total_day_pay,
-                        Weekly_Total_Pay: Weekly_Pay
+                        Weekly_Total_Pay: Weekly_Pay,
+                        Tue_OT_Hours: overtime_hours,
+                        Tue_OT_Compensation: overtime_pay,
+                        Tue_Late_Hours: late_hours,
+                        Tue_Late_Deduction: late_penalty
                     }
                 });
                 if(current_employee.Employee_Type === "Employee"){
@@ -204,6 +276,17 @@ const employee_clockpage_controller = {
             const TI_hour = parseInt(hours);
             const TI_minute = parseInt(minutes);
             const time_in_total_minutes = TI_hour * 60 + TI_minute;
+
+            //++
+            let late_penalty = 0;
+            let late_hours = 0;
+            if (time_in_total_minutes > start_of_regular_time) {
+                const late_minutes = time_in_total_minutes - start_of_regular_time;
+                late_hours = Math.ceil(late_minutes / 60); 
+                late_penalty = late_hours * hr;
+            }
+            //--
+
             var time_out_total_minutes;
             if(TI_weekdayIndex !== TO_weekdayIndex){
                 time_out_total_minutes = 23 * 60 + 59;
@@ -219,8 +302,25 @@ const employee_clockpage_controller = {
             const total_hours = Math.floor(total_time / 60);
             const total_minutes = total_time % 60;
 
-            const total_day_pay = total_hours*hr + total_minutes*mr;
+            //++
+            const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
+            const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
+    
+            
+            const regular_hours = Math.floor(regular_time / 60);
+            const regular_minutes = regular_time % 60;
+            const regular_pay = regular_hours * hr + regular_minutes * mr;
+    
+            
+            const overtime_hours = Math.floor(overtime / 60);
+            const overtime_minutes = overtime % 60;
+            const overtime_rate = hr * 1.5;
+            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
+    
+            
+            const total_day_pay = regular_pay + overtime_pay - late_penalty;
             const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            //--
 
             try{
                 await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
@@ -229,7 +329,11 @@ const employee_clockpage_controller = {
                         Wed_Hours: total_hours,
                         Wed_Minutes: total_minutes,
                         Wed_Total_Pay: total_day_pay,
-                        Weekly_Total_Pay: Weekly_Pay
+                        Weekly_Total_Pay: Weekly_Pay,
+                        Wed_OT_Hours: overtime_hours,
+                        Wed_OT_Compensation: overtime_pay,
+                        Wed_Late_Hours: late_hours,
+                        Wed_Late_Deduction: late_penalty
                     }
                 });
                 if(current_employee.Employee_Type === "Employee"){
@@ -247,6 +351,17 @@ const employee_clockpage_controller = {
             const TI_hour = parseInt(hours);
             const TI_minute = parseInt(minutes);
             const time_in_total_minutes = TI_hour * 60 + TI_minute;
+
+            //++
+            let late_penalty = 0;
+            let late_hours = 0;
+            if (time_in_total_minutes > start_of_regular_time) {
+                const late_minutes = time_in_total_minutes - start_of_regular_time;
+                late_hours = Math.ceil(late_minutes / 60); 
+                late_penalty = late_hours * hr;
+            }
+            //--
+
             var time_out_total_minutes;
             if(TI_weekdayIndex !== TO_weekdayIndex){
                 time_out_total_minutes = 23 * 60 + 59;
@@ -262,8 +377,25 @@ const employee_clockpage_controller = {
             const total_hours = Math.floor(total_time / 60);
             const total_minutes = total_time % 60;
 
-            const total_day_pay = total_hours*hr + total_minutes*mr;
+            //++
+            const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
+            const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
+    
+            
+            const regular_hours = Math.floor(regular_time / 60);
+            const regular_minutes = regular_time % 60;
+            const regular_pay = regular_hours * hr + regular_minutes * mr;
+    
+            
+            const overtime_hours = Math.floor(overtime / 60);
+            const overtime_minutes = overtime % 60;
+            const overtime_rate = hr * 1.5;
+            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
+    
+            
+            const total_day_pay = regular_pay + overtime_pay - late_penalty;
             const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            //--
 
             try{
                 await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
@@ -272,7 +404,11 @@ const employee_clockpage_controller = {
                         Thu_Hours: total_hours,
                         Thu_Minutes: total_minutes,
                         Thu_Total_Pay: total_day_pay,
-                        Weekly_Total_Pay: Weekly_Pay
+                        Weekly_Total_Pay: Weekly_Pay,
+                        Thu_OT_Hours: overtime_hours,
+                        Thu_OT_Compensation: overtime_pay,
+                        Thu_Late_Hours: late_hours,
+                        Thu_Late_Deduction: late_penalty
                     }
                 });
                 if(current_employee.Employee_Type === "Employee"){
@@ -290,6 +426,17 @@ const employee_clockpage_controller = {
             const TI_hour = parseInt(hours);
             const TI_minute = parseInt(minutes);
             const time_in_total_minutes = TI_hour * 60 + TI_minute;
+
+            //++
+            let late_penalty = 0;
+            let late_hours = 0;
+            if (time_in_total_minutes > start_of_regular_time) {
+                const late_minutes = time_in_total_minutes - start_of_regular_time;
+                late_hours = Math.ceil(late_minutes / 60); 
+                late_penalty = late_hours * hr;
+            }
+            //--
+
             var time_out_total_minutes;
             if(TI_weekdayIndex !== TO_weekdayIndex){
                 time_out_total_minutes = 23 * 60 + 59;
@@ -305,8 +452,25 @@ const employee_clockpage_controller = {
             const total_hours = Math.floor(total_time / 60);
             const total_minutes = total_time % 60;
 
-            const total_day_pay = total_hours*hr + total_minutes*mr;
+            //++
+            const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
+            const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
+    
+            
+            const regular_hours = Math.floor(regular_time / 60);
+            const regular_minutes = regular_time % 60;
+            const regular_pay = regular_hours * hr + regular_minutes * mr;
+    
+            
+            const overtime_hours = Math.floor(overtime / 60);
+            const overtime_minutes = overtime % 60;
+            const overtime_rate = hr * 1.5;
+            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
+    
+            
+            const total_day_pay = regular_pay + overtime_pay - late_penalty;
             const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            //--
 
             try{
                 await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
@@ -315,7 +479,11 @@ const employee_clockpage_controller = {
                         Fri_Hours: total_hours,
                         Fri_Minutes: total_minutes,
                         Fri_Total_Pay: total_day_pay,
-                        Weekly_Total_Pay: Weekly_Pay
+                        Weekly_Total_Pay: Weekly_Pay,
+                        Fri_OT_Hours: overtime_hours,
+                        Fri_OT_Compensation: overtime_pay,
+                        Fri_Late_Hours: late_hours,
+                        Fri_Late_Deduction: late_penalty
                     }
                 });
                 if(current_employee.Employee_Type === "Employee"){
@@ -333,6 +501,17 @@ const employee_clockpage_controller = {
             const TI_hour = parseInt(hours);
             const TI_minute = parseInt(minutes);
             const time_in_total_minutes = TI_hour * 60 + TI_minute;
+
+            //++
+            let late_penalty = 0;
+            let late_hours = 0;
+            if (time_in_total_minutes > start_of_regular_time) {
+                const late_minutes = time_in_total_minutes - start_of_regular_time;
+                late_hours = Math.ceil(late_minutes / 60); 
+                late_penalty = late_hours * hr;
+            }
+            //--
+
             var time_out_total_minutes;
             if(TI_weekdayIndex !== TO_weekdayIndex){
                 time_out_total_minutes = 23 * 60 + 59;
@@ -348,8 +527,25 @@ const employee_clockpage_controller = {
             const total_hours = Math.floor(total_time / 60);
             const total_minutes = total_time % 60;
 
-            const total_day_pay = total_hours*hr + total_minutes*mr;
+            //++
+            const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
+            const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
+    
+            
+            const regular_hours = Math.floor(regular_time / 60);
+            const regular_minutes = regular_time % 60;
+            const regular_pay = regular_hours * hr + regular_minutes * mr;
+    
+            
+            const overtime_hours = Math.floor(overtime / 60);
+            const overtime_minutes = overtime % 60;
+            const overtime_rate = hr * 1.5;
+            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
+    
+            
+            const total_day_pay = regular_pay + overtime_pay - late_penalty;
             const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            //--
 
             try{//add the creation of new payroll here per employee
                 await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
@@ -358,7 +554,11 @@ const employee_clockpage_controller = {
                         Sat_Hours: total_hours,
                         Sat_Minutes: total_minutes,
                         Sat_Total_Pay: total_day_pay,
-                        Weekly_Total_Pay: Weekly_Pay
+                        Weekly_Total_Pay: Weekly_Pay,
+                        Sat_OT_Hours: overtime_hours,
+                        Sat_OT_Compensation: overtime_pay,
+                        Sat_Late_Hours: late_hours,
+                        Sat_Late_Deduction: late_penalty
                     }
                 });
                 if(current_employee.Employee_Type === "Employee"){
@@ -376,6 +576,17 @@ const employee_clockpage_controller = {
             const TI_hour = parseInt(hours);
             const TI_minute = parseInt(minutes);
             const time_in_total_minutes = TI_hour * 60 + TI_minute;
+
+            //++
+            let late_penalty = 0;
+            let late_hours = 0;
+            if (time_in_total_minutes > start_of_regular_time) {
+                const late_minutes = time_in_total_minutes - start_of_regular_time;
+                late_hours = Math.ceil(late_minutes / 60); 
+                late_penalty = late_hours * hr;
+            }
+            //--
+
             var time_out_total_minutes;
             if(TI_weekdayIndex !== TO_weekdayIndex){
                 time_out_total_minutes = 23 * 60 + 59;
@@ -391,8 +602,25 @@ const employee_clockpage_controller = {
             const total_hours = Math.floor(total_time / 60);
             const total_minutes = total_time % 60;
 
-            const total_day_pay = total_hours*hr + total_minutes*mr;
+            //++
+            const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
+            const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
+    
+            
+            const regular_hours = Math.floor(regular_time / 60);
+            const regular_minutes = regular_time % 60;
+            const regular_pay = regular_hours * hr + regular_minutes * mr;
+    
+            
+            const overtime_hours = Math.floor(overtime / 60);
+            const overtime_minutes = overtime % 60;
+            const overtime_rate = hr * 1.5;
+            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
+    
+            
+            const total_day_pay = regular_pay + overtime_pay - late_penalty;
             const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            //--
 
             try{
                 await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
@@ -401,7 +629,11 @@ const employee_clockpage_controller = {
                         Sun_Hours: total_hours,
                         Sun_Minutes: total_minutes,
                         Sun_Total_Pay: total_day_pay,
-                        Weekly_Total_Pay: Weekly_Pay
+                        Weekly_Total_Pay: Weekly_Pay,
+                        Sun_OT_Hours: overtime_hours,
+                        Sun_OT_Compensation: overtime_pay,
+                        Sun_Late_Hours: late_hours,
+                        Sun_Late_Deduction: late_penalty
                     }
                 });
                 if(current_employee.Employee_Type === "Employee"){
