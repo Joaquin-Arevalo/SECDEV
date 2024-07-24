@@ -40,6 +40,7 @@ describe('get_forgot_password', () => {
         });
     });
 
+    //failed
     it('should handle errors and return 500 status', async () => {
         
         const req = {};

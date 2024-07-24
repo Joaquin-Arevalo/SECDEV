@@ -33,6 +33,7 @@ describe('get_emprecs', () => {
         expect(res.render).toHaveBeenCalledWith("admin-empman-emprecs", { emp_emails: employees });
     });
 
+    //failed
     it('should handle errors and return 500 status code', async () => {
         const req = httpMocks.createRequest();
         const res = httpMocks.createResponse();
@@ -86,6 +87,7 @@ describe('post_specific_emprecs', () => {
         });
     });
 
+    //failed
     it('should handle errors and return 500 status code', async () => {
         const req = httpMocks.createRequest({
             method: 'POST',

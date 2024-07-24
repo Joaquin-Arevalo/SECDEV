@@ -42,6 +42,7 @@ describe('admin_empman_payroll_controller', () => {
         expect(res.render).toHaveBeenCalledWith('admin-empman-payroll', { emp_total: employees });
     });
 
+    //failed
     it('should render with employee weekly payroll', async () => {
         
         const req = httpMocks.createRequest({
@@ -80,6 +81,7 @@ describe('admin_empman_payroll_controller', () => {
         });
     });
 
+    //failed
     it('should update payroll and respond with success', async () => {
         const req = httpMocks.createRequest({
             body: {
@@ -112,6 +114,7 @@ describe('admin_empman_payroll_controller', () => {
         expect(res.json).toHaveBeenCalledWith({ success: true, message: "Payroll successfully updated" });
     });
 
+    //failed
     it('should handle errors and respond with failure', async () => {
         const req = httpMocks.createRequest({
             body: {
