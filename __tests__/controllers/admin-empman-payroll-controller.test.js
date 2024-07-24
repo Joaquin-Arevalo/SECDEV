@@ -1,10 +1,10 @@
-const database = require('../models/database');
-const employee = require('../models/employee_model');
-const payroll = require('../models/payroll_model');
-const admin_empman_payroll_controller = require('../controllers/admin-empman-payroll-controller');
+const database = require('../../models/database');
+const employee = require('../../models/employee_model');
+const payroll = require('../../models/payroll_model');
+const admin_empman_payroll_controller = require('../../controllers/admin-empman-payroll-controller');
 const httpMocks = require('node-mocks-http');
 
-jest.mock('../models/database');
+jest.mock('../../models/database');
 
 describe('admin_empman_payroll_controller', () => {
     beforeEach(() => {

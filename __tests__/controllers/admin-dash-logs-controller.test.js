@@ -1,13 +1,13 @@
-const payroll = require('../models/payroll_model.js');
-const employee = require('../models/employee_model.js');
+const payroll = require('../../models/payroll_model.js');
+const employee = require('../../models/employee_model.js');
 const httpMocks = require('node-mocks-http');
-const admin_dash_logs_controller = require('../controllers/admin-dash-logs-controller.js');
+const admin_dash_logs_controller = require('../../controllers/admin-dash-logs-controller.js');
 const { query } = require('express');
-const database = require('../models/database.js');
-const admin_empman_emprecs_controller = require('../controllers/admin-empman-emprecs-controller.js');
+const database = require('../../models/database.js');
+const admin_empman_emprecs_controller = require('../../controllers/admin-empman-emprecs-controller.js');
 
-jest.mock('../models/database.js');
-jest.mock('../models/employee_model.js')
+jest.mock('../../models/database.js');
+jest.mock('../../models/employee_model.js')
 
 describe('Admin Dashboard Controller', () => {
     describe('get_admin_dash_logs', () => {

@@ -1,9 +1,9 @@
-const admin_notifs_controller = require('../controllers/admin-notifs-controller');
-const database = require('../models/database');
-const forgot_password = require('../models/forgot_password_model');
+const admin_notifs_controller = require('../../controllers/admin-notifs-controller');
+const database = require('../../models/database');
+const forgot_password = require('../../models/forgot_password_model');
 
-jest.mock('../models/database');
-jest.mock('../models/forgot_password_model');
+jest.mock('../../models/database');
+jest.mock('../../models/forgot_password_model');
 
 describe('get_admin_notifs', () => {
     it('should render the admin-notifs page', () => {

@@ -1,10 +1,10 @@
-const employee = require('../models/employee_model.js');
-const database = require('../models/database.js');
+const employee = require('../../models/employee_model.js');
+const database = require('../../models/database.js');
 const httpMocks = require('node-mocks-http');
-const admin_empman_emprecs_controller = require('../controllers/admin-empman-emprecs-controller');
+const admin_empman_emprecs_controller = require('../../controllers/admin-empman-emprecs-controller.js');
 
-jest.mock('../models/database.js');
-jest.mock('../models/employee_model.js');
+jest.mock('../../models/database.js');
+jest.mock('../../models/employee_model.js');
 
 beforeEach(() => {
     jest.clearAllMocks();
