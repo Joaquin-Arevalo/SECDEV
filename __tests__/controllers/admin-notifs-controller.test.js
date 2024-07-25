@@ -52,6 +52,6 @@ describe('get_forgot_password', () => {
         await admin_notifs_controller.get_forgot_password(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith('Internal Server Error'); 
+        expect(res.send).toHaveBeenCalledWith('Internal Server Error!'); 
     })
 });

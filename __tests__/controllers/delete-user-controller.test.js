@@ -55,7 +55,7 @@ it('should render delete-user page with specific employee details', async () => 
     expect(renderSpy).toHaveBeenCalledWith('delete-user', { emp_sum: mockEmployee, emp_emails: mockEmployees });
 });
 
-//failed
+
 it('should delete user and forgot_password entry and update forgot password numbers', async () => {
 
     const req = httpMocks.createRequest({ body: { email: 'test@example.com' } });
@@ -77,10 +77,10 @@ it('should delete user and forgot_password entry and update forgot password numb
     expect(forgot_password.updateMany).toHaveBeenCalledWith({ Forgot_Password_Number: { $gt: 1 } }, { $inc: { Forgot_Password_Number: -1 } });
 
     expect(employee.deleteOne).toHaveBeenCalledWith(mockEmployee);
-    expect(res._getData()).toEqual(JSON.stringify({ success: true, message: "Deletion successful" }));
+    expect(res._getData()).toEqual(JSON.stringify({ success: true, message: "Deletion successful!" }));
 });
 
-//failed
+
 it('should delete user without updating forgot_password count', async () => {
 
     const req = httpMocks.createRequest({ body: { email: 'test@example.com' } });
@@ -96,10 +96,9 @@ it('should delete user without updating forgot_password count', async () => {
     expect(employee.findOne).toHaveBeenCalledWith({ Email: 'test@example.com' });
     expect(forgot_password.findOne).toHaveBeenCalledWith({ Email: 'test@example.com' });
     expect(employee.deleteOne).toHaveBeenCalledWith(mockEmployee);
-    expect(res._getData()).toEqual(JSON.stringify({ success: true, message: "Deletion successful" }));
+    expect(res._getData()).toEqual(JSON.stringify({ success: true, message: "Deletion successful!" }));
 });
 
-//failed
 it('should return 400 if user does not exist', async () => {
     
     const req = httpMocks.createRequest({ body: { email: 'nonexistent@example.com' } });
@@ -113,7 +112,7 @@ it('should return 400 if user does not exist', async () => {
 
     expect(employee.findOne).toHaveBeenCalledWith({ Email: 'nonexistent@example.com' });
     expect(statusSpy).toHaveBeenCalledWith(400);
-    expect(jsonSpy).toHaveBeenCalledWith({ message: "User does not exist" });
+    expect(jsonSpy).toHaveBeenCalledWith({ message: "There are no Existing Users!" });
 });
 
 

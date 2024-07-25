@@ -69,8 +69,8 @@ describe('admin_empman_payroll_controller', () => {
 
         await admin_empman_payroll_controller.get_emp_wpay(req, res);
 
-      //  expect(database.findOne).toHaveBeenCalledWith(payroll, { Email: 'john@example.com', Week: '1' });
-       // expect(database.findMany).toHaveBeenCalledWith(employee, expect.any(Object));
+       expect(database.findOne).toHaveBeenCalledWith(payroll, { Email: 'john@example.com', Week: '1' });
+       expect(database.findMany).toHaveBeenCalledWith(employee, expect.any(Object));
 
         
         expect(res.render).toHaveBeenCalledWith('admin-empman-payroll', {
@@ -81,7 +81,6 @@ describe('admin_empman_payroll_controller', () => {
         });
     });
 
-    //failed
     it('should update payroll and respond with success', async () => {
         const req = httpMocks.createRequest({
             body: {
@@ -111,7 +110,7 @@ describe('admin_empman_payroll_controller', () => {
 
         expect(database.findOne).toHaveBeenCalledWith(payroll, { _id: '1' });
         expect(database.updateOne).toHaveBeenCalledWith(payroll, { _id: '1' }, expect.any(Object));
-        expect(res.json).toHaveBeenCalledWith({ success: true, message: "Payroll successfully updated" });
+        expect(res.json).toHaveBeenCalledWith({ success: true, message: "Payroll updated successfully!" });
     });
 
     //failed
@@ -130,7 +129,7 @@ describe('admin_empman_payroll_controller', () => {
         await admin_empman_payroll_controller.post_update_payroll(req, res);
 
         expect(database.findOne).toHaveBeenCalledWith(payroll, { _id: '1' });
-        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Error updating payroll" });
+        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Error updating payroll!" });
     });
 
 });

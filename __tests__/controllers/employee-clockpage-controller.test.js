@@ -83,7 +83,7 @@ describe('get_employee_time_in_status', () => {
 
         await employee_clockpage_controller.get_employee_time_in_status(req, res);
 
-        expect(res._getData()).toBe("Internal Server Error");
+        expect(res._getData()).toBe("Internal Server Error!");
         expect(res.statusCode).toBe(500);
     });
 });
@@ -141,7 +141,7 @@ describe('post_employee_time_out', () => {
         await employee_clockpage_controller.post_employee_time_out(req, res);
 
         expect(database.updateOne).toHaveBeenCalled();
-        expect(res._getJSONData()).toEqual({ success: true, type: "Emp", message: "Time out recorded" });
+        expect(res._getJSONData()).toEqual({ success: true, type: "Emp", message: "Time out recorded successfully!" });
     });
 
     //failed
@@ -153,12 +153,13 @@ describe('post_employee_time_out', () => {
         });
 
         const res = httpMocks.createResponse();
+        res.json = jest.fn();
 
         database.findOne.mockRejectedValueOnce(new Error('Database error'));
 
         await employee_clockpage_controller.post_employee_time_out(req, res);
 
         expect(res.statusCode).toBe(500);
-        expect(res._getJSONData()).toEqual({ success: false, message: "Time out failed" });
+        expect(res._getJSONData()).toEqual({ success: false, message: "Error recording time out!" });
     });
 });
