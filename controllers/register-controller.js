@@ -114,7 +114,10 @@ const register_controller = {
                         Weekly_Total_Additional: 0,
                         Weekly_Total_Deduction: 0,
                         Weekly_Total_Pay: 0,
-                        Weekly_Hourly_Rate: 10
+                        Weekly_Hourly_Rate: 10,
+                        Deduction_PAGIBIG_Contribution: 0,
+                        Deduction_Philhealth: 0,
+                        Deduction_SSS: 0
                     });
                     await new_payroll.save();
 
@@ -196,7 +199,10 @@ const register_controller = {
                         Weekly_Total_Additional: 0,
                         Weekly_Total_Deduction: 0,
                         Weekly_Total_Pay: 0,
-                        Weekly_Hourly_Rate: 10
+                        Weekly_Hourly_Rate: 10,
+                        Deduction_PAGIBIG_Contribution: 0,
+                        Deduction_Philhealth: 0,
+                        Deduction_SSS: 0
                     });
                     await new_payroll_1.save();
 
@@ -278,7 +284,10 @@ const register_controller = {
                         Weekly_Total_Additional: 0,
                         Weekly_Total_Deduction: 0,
                         Weekly_Total_Pay: 0,
-                        Weekly_Hourly_Rate: 10
+                        Weekly_Hourly_Rate: 10,
+                        Deduction_PAGIBIG_Contribution: 0,
+                        Deduction_Philhealth: 0,
+                        Deduction_SSS: 0
                     });
                     await new_payroll_2.save();
                 }

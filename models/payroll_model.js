@@ -250,8 +250,16 @@ var payroll_schema = new mongoose.Schema({
     Weekly_Hourly_Rate: {
         type: Number,
         required: true
+    },
+    Deduction_PAGIBIG_Contribution: {
+        type: Number,
+    },
+    Deduction_Philhealth: {
+        type: Number,
+    },
+    Deduction_SSS: {
+        type: Number,
     }
-
 });
 
 module.exports = mongoose.model('payroll', payroll_schema);

@@ -17,7 +17,37 @@ const update_payroll_controller = {
                 const employee_email = employee_email_data[i].Email;
                 const week_1 = await database.findOne(payroll, {Email: employee_email, Week: 1});
                 const week_0 = await database.findOne(payroll, {Email: employee_email, Week: 0});
-        
+                
+                /* for week 0 only
+                pagibig contribution:
+                -php 1,500 and below = 1%; php over 1500 = 2%
+
+                philhealth 
+                -5% of weekly
+
+                SSS
+                -4.5% weekly
+                */
+                var PAGIBIG_Contribution = 0;
+                if(week_0.Weekly_Total_Pay <= 1500){
+                    PAGIBIG_Contribution = week_0.Weekly_Total_Pay * 0.01;
+                }else{
+                    PAGIBIG_Contribution = week_0.Weekly_Total_Pay * 0.02;
+                }
+                const Philhealth = week_0.Weekly_Total_Pay * 0.05;
+                const SSS = week_0.Weekly_Total_Pay * 0.045;
+                const Total_Pay = week_0.Weekly_Total_Pay - (PAGIBIG_Contribution + Philhealth + SSS);
+
+                //updating the value of weekly pay and taxes
+                await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
+                    $set: {
+                        Deduction_PAGIBIG_Contribution: PAGIBIG_Contribution,
+                        Deduction_Philhealth: Philhealth,
+                        Deduction_SSS: SSS,
+                        Weekly_Total_Pay: Total_Pay
+                    }
+                });
+
                 //updating the values of week 2 with week 1 values
                 await database.updateOne(payroll, {Email: employee_email, Week: 2}, {
                     $set: {
@@ -96,7 +126,10 @@ const update_payroll_controller = {
                         Weekly_Total_Additional: week_1.Weekly_Total_Additional,
                         Weekly_Total_Deduction: week_1.Weekly_Total_Deduction,
                         Weekly_Total_Pay: week_1.Weekly_Total_Pay,
-                        Weekly_Hourly_Rate: week_1.Weekly_Hourly_Rate
+                        Weekly_Hourly_Rate: week_1.Weekly_Hourly_Rate,
+                        Deduction_PAGIBIG_Contribution: week_1.Deduction_PAGIBIG_Contribution,
+                        Deduction_Philhealth: week_1.Deduction_Philhealth,
+                        Deduction_SSS: week_1.Deduction_SSS
                     }
                 });
         
@@ -178,7 +211,10 @@ const update_payroll_controller = {
                         Weekly_Total_Additional: week_0.Weekly_Total_Additional,
                         Weekly_Total_Deduction: week_0.Weekly_Total_Deduction,
                         Weekly_Total_Pay: week_0.Weekly_Total_Pay,
-                        Weekly_Hourly_Rate: week_0.Weekly_Hourly_Rate
+                        Weekly_Hourly_Rate: week_0.Weekly_Hourly_Rate,
+                        Deduction_PAGIBIG_Contribution: week_0.Deduction_PAGIBIG_Contribution,
+                        Deduction_Philhealth: week_0.Deduction_Philhealth,
+                        Deduction_SSS: week_0.Deduction_SSS
                     }
                 });
         
@@ -260,7 +296,10 @@ const update_payroll_controller = {
                         Weekly_Total_Additional: 0,
                         Weekly_Total_Deduction: 0,
                         Weekly_Total_Pay: 0,
-                        Weekly_Hourly_Rate: 10
+                        Weekly_Hourly_Rate: 10,
+                        Deduction_PAGIBIG_Contribution: 0,
+                        Deduction_Philhealth: 0,
+                        Deduction_SSS: 0
                     }
                 });
             }

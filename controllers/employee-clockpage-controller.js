@@ -36,6 +36,15 @@ const employee_clockpage_controller = {
         const {Time_In, TI_weekdayIndex, Time_In_Date} = req.body;
         const employee_email = req.session.Email;
 
+        // let regular_holiday = ["01-01", "03-28", "03-29", "04-09", "05-01", "06-12", "08-26", "11-30", "12-25", "12-30",];
+        // function is_regular_holiday(date){
+        //     let month_day = date.slice(5, 10);
+        //     return regular_holiday.includes(month_day);
+        // }
+        //make a checker for previous days if monday then dont
+        //or do i just check the previous seven days?
+        //on time in initializes the dates of the days before and after the current dday for the week
+
         await database.updateOne(employee, {Email: req.session.Email}, {IsTimedIn: true})
         if(TI_weekdayIndex === 1){
             await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
@@ -113,6 +122,21 @@ const employee_clockpage_controller = {
         const TI_weekdayIndex = day.Time_In_Weekday_Index;
 
         //++
+        let regular_holiday = ["01-01", "03-28", "03-29", "04-09", "05-01", "06-12", "08-26", "11-30", "12-25", "12-30",];
+        let special_holiday = ["02-10", "03-30", "08-21", "11-01", "11-02", "12-08", "12-24", "12-31"];
+
+        function is_regular_holiday(date){
+            let month_day = date.slice(5, 10);
+            return regular_holiday.includes(month_day);
+        }
+
+        function is_special_holiday(date){
+            let month_day = date.slice(5, 10);
+            return special_holiday.includes(month_day);
+        }
+        //--
+
+        //++
         const start_of_regular_time = 8 * 60;
         const end_of_regular_time = 17 * 60;
         //--
@@ -151,21 +175,42 @@ const employee_clockpage_controller = {
             //++
             const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
             const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
-    
-            
             const regular_hours = Math.floor(regular_time / 60);
             const regular_minutes = regular_time % 60;
-            const regular_pay = regular_hours * hr + regular_minutes * mr;
-    
-            
             const overtime_hours = Math.floor(overtime / 60);
             const overtime_minutes = overtime % 60;
-            const overtime_rate = hr * 1.5;
-            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
-    
-            
-            const total_day_pay = regular_pay + overtime_pay - late_penalty;
-            const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            var overtime_rate = hr * 1.5;
+            var overtime_pay;
+            var total_day_pay;
+            var Weekly_Pay;
+
+            if(is_regular_holiday(day.Mon_Date)){
+                const hr_rh = hr*2;
+                const mr_rh = (hr_rh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_rh + regular_minutes * mr_rh;
+                const overtime_rate_rh = overtime_rate*1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_rh + overtime_minutes * (overtime_rate_rh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else if(is_special_holiday(day.Mon_Date)){
+                const hr_sh = hr*1.3;
+                const mr_sh = (hr_sh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_sh + regular_minutes * mr_sh;
+                const overtime_rate_sh = overtime_rate * 1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_sh + overtime_minutes * (overtime_rate_sh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else{
+                const regular_pay = regular_hours * hr + regular_minutes * mr;
+
+                overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);                
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            }
             //--
 
             // const total_day_pay = total_hours*hr + total_minutes*mr;
@@ -230,21 +275,42 @@ const employee_clockpage_controller = {
             //++
             const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
             const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
-    
-            
             const regular_hours = Math.floor(regular_time / 60);
             const regular_minutes = regular_time % 60;
-            const regular_pay = regular_hours * hr + regular_minutes * mr;
-    
-            
             const overtime_hours = Math.floor(overtime / 60);
             const overtime_minutes = overtime % 60;
-            const overtime_rate = hr * 1.5;
-            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
-    
-            
-            const total_day_pay = regular_pay + overtime_pay - late_penalty;
-            const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            var overtime_rate = hr * 1.5;
+            var overtime_pay;
+            var total_day_pay;
+            var Weekly_Pay;
+
+            if(is_regular_holiday(day.Tue_Date)){
+                const hr_rh = hr*2;
+                const mr_rh = (hr_rh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_rh + regular_minutes * mr_rh;
+                const overtime_rate_rh = overtime_rate*1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_rh + overtime_minutes * (overtime_rate_rh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else if(is_special_holiday(day.Tue_Date)){
+                const hr_sh = hr*1.3;
+                const mr_sh = (hr_sh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_sh + regular_minutes * mr_sh;
+                const overtime_rate_sh = overtime_rate * 1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_sh + overtime_minutes * (overtime_rate_sh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else{
+                const regular_pay = regular_hours * hr + regular_minutes * mr;
+
+                overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);                
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            }
             //--
 
             try{
@@ -305,21 +371,42 @@ const employee_clockpage_controller = {
             //++
             const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
             const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
-    
-            
             const regular_hours = Math.floor(regular_time / 60);
             const regular_minutes = regular_time % 60;
-            const regular_pay = regular_hours * hr + regular_minutes * mr;
-    
-            
             const overtime_hours = Math.floor(overtime / 60);
             const overtime_minutes = overtime % 60;
-            const overtime_rate = hr * 1.5;
-            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
-    
-            
-            const total_day_pay = regular_pay + overtime_pay - late_penalty;
-            const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            var overtime_rate = hr * 1.5;
+            var overtime_pay;
+            var total_day_pay;
+            var Weekly_Pay;
+
+            if(is_regular_holiday(day.Wed_Date)){
+                const hr_rh = hr*2;
+                const mr_rh = (hr_rh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_rh + regular_minutes * mr_rh;
+                const overtime_rate_rh = overtime_rate*1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_rh + overtime_minutes * (overtime_rate_rh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else if(is_special_holiday(day.Wed_Date)){
+                const hr_sh = hr*1.3;
+                const mr_sh = (hr_sh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_sh + regular_minutes * mr_sh;
+                const overtime_rate_sh = overtime_rate * 1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_sh + overtime_minutes * (overtime_rate_sh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else{
+                const regular_pay = regular_hours * hr + regular_minutes * mr;
+
+                overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);                
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            }
             //--
 
             try{
@@ -380,21 +467,42 @@ const employee_clockpage_controller = {
             //++
             const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
             const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
-    
-            
             const regular_hours = Math.floor(regular_time / 60);
             const regular_minutes = regular_time % 60;
-            const regular_pay = regular_hours * hr + regular_minutes * mr;
-    
-            
             const overtime_hours = Math.floor(overtime / 60);
             const overtime_minutes = overtime % 60;
-            const overtime_rate = hr * 1.5;
-            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
-    
-            
-            const total_day_pay = regular_pay + overtime_pay - late_penalty;
-            const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            var overtime_rate = hr * 1.5;
+            var overtime_pay;
+            var total_day_pay;
+            var Weekly_Pay;
+
+            if(is_regular_holiday(day.Thu_Date)){
+                const hr_rh = hr*2;
+                const mr_rh = (hr_rh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_rh + regular_minutes * mr_rh;
+                const overtime_rate_rh = overtime_rate*1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_rh + overtime_minutes * (overtime_rate_rh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else if(is_special_holiday(day.Thu_Date)){
+                const hr_sh = hr*1.3;
+                const mr_sh = (hr_sh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_sh + regular_minutes * mr_sh;
+                const overtime_rate_sh = overtime_rate * 1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_sh + overtime_minutes * (overtime_rate_sh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else{
+                const regular_pay = regular_hours * hr + regular_minutes * mr;
+
+                overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);                
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            }
             //--
 
             try{
@@ -455,21 +563,42 @@ const employee_clockpage_controller = {
             //++
             const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
             const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
-    
-            
             const regular_hours = Math.floor(regular_time / 60);
             const regular_minutes = regular_time % 60;
-            const regular_pay = regular_hours * hr + regular_minutes * mr;
-    
-            
             const overtime_hours = Math.floor(overtime / 60);
             const overtime_minutes = overtime % 60;
-            const overtime_rate = hr * 1.5;
-            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
-    
-            
-            const total_day_pay = regular_pay + overtime_pay - late_penalty;
-            const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            var overtime_rate = hr * 1.5;
+            var overtime_pay;
+            var total_day_pay;
+            var Weekly_Pay;
+
+            if(is_regular_holiday(day.Fri_Date)){
+                const hr_rh = hr*2;
+                const mr_rh = (hr_rh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_rh + regular_minutes * mr_rh;
+                const overtime_rate_rh = overtime_rate*1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_rh + overtime_minutes * (overtime_rate_rh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else if(is_special_holiday(day.Fri_Date)){
+                const hr_sh = hr*1.3;
+                const mr_sh = (hr_sh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_sh + regular_minutes * mr_sh;
+                const overtime_rate_sh = overtime_rate * 1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_sh + overtime_minutes * (overtime_rate_sh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else{
+                const regular_pay = regular_hours * hr + regular_minutes * mr;
+
+                overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);                
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            }
             //--
 
             try{
@@ -530,21 +659,42 @@ const employee_clockpage_controller = {
             //++
             const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
             const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
-    
-            
             const regular_hours = Math.floor(regular_time / 60);
             const regular_minutes = regular_time % 60;
-            const regular_pay = regular_hours * hr + regular_minutes * mr;
-    
-            
             const overtime_hours = Math.floor(overtime / 60);
             const overtime_minutes = overtime % 60;
-            const overtime_rate = hr * 1.5;
-            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
-    
-            
-            const total_day_pay = regular_pay + overtime_pay - late_penalty;
-            const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            var overtime_rate = hr * 1.5;
+            var overtime_pay;
+            var total_day_pay;
+            var Weekly_Pay;
+
+            if(is_regular_holiday(day.Sat_Date)){
+                const hr_rh = hr*2;
+                const mr_rh = (hr_rh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_rh + regular_minutes * mr_rh;
+                const overtime_rate_rh = overtime_rate*1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_rh + overtime_minutes * (overtime_rate_rh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else if(is_special_holiday(day.Sat_Date)){
+                const hr_sh = hr*1.3;
+                const mr_sh = (hr_sh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_sh + regular_minutes * mr_sh;
+                const overtime_rate_sh = overtime_rate * 1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_sh + overtime_minutes * (overtime_rate_sh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else{
+                const regular_pay = regular_hours * hr + regular_minutes * mr;
+
+                overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);                
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            }
             //--
 
             try{//add the creation of new payroll here per employee
@@ -605,21 +755,42 @@ const employee_clockpage_controller = {
             //++
             const regular_time = Math.min(time_out_total_minutes, end_of_regular_time) - time_in_total_minutes;
             const overtime = Math.max(time_out_total_minutes - end_of_regular_time, 0);
-    
-            
             const regular_hours = Math.floor(regular_time / 60);
             const regular_minutes = regular_time % 60;
-            const regular_pay = regular_hours * hr + regular_minutes * mr;
-    
-            
             const overtime_hours = Math.floor(overtime / 60);
             const overtime_minutes = overtime % 60;
-            const overtime_rate = hr * 1.5;
-            const overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);
-    
-            
-            const total_day_pay = regular_pay + overtime_pay - late_penalty;
-            const Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            var overtime_rate = hr * 1.5;
+            var overtime_pay;
+            var total_day_pay;
+            var Weekly_Pay;
+
+            if(is_regular_holiday(day.Sun_Date)){
+                const hr_rh = hr*2;
+                const mr_rh = (hr_rh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_rh + regular_minutes * mr_rh;
+                const overtime_rate_rh = overtime_rate*1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_rh + overtime_minutes * (overtime_rate_rh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else if(is_special_holiday(day.Sun_Date)){
+                const hr_sh = hr*1.3;
+                const mr_sh = (hr_sh/60).toFixed(2);
+                const regular_pay = regular_hours * hr_sh + regular_minutes * mr_sh;
+                const overtime_rate_sh = overtime_rate * 1.3;
+
+                overtime_pay = overtime_hours * overtime_rate_sh + overtime_minutes * (overtime_rate_sh / 60);
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+
+            }else{
+                const regular_pay = regular_hours * hr + regular_minutes * mr;
+
+                overtime_pay = overtime_hours * overtime_rate + overtime_minutes * (overtime_rate / 60);                
+                total_day_pay = regular_pay + overtime_pay - late_penalty;
+                Weekly_Pay = day.Weekly_Total_Pay + total_day_pay;
+            }
             //--
 
             try{

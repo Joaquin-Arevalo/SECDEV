@@ -10,7 +10,8 @@
     "hbs": "^4.2.0",
     "mongodb": "^5.7.0",
     "mongoose": "^7.4.0",
-    "node-schedule": "^2.1.1"
+    "node-schedule": "^2.1.1",
+    "pdfkit": "^0.15.0"
   },
   "name": "stsweng",
   "description": "",
