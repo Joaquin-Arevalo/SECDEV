@@ -47,7 +47,7 @@ const forgot_password_controller = {
                 await forgot_password.deleteOne({Email: email});
 
                 await forgot_password.updateMany({Forgot_Password_Number: {$gt: curr_forgot_password_number}}, {$inc: {Forgot_Password_Number: -1}});
-                res.status(200).json({success: true, messasge: "Forgot Password Record Deleted Successfully."});
+                res.status(200).json({success: true, message: "Forgot Password Record Deleted Successfully."});
             }catch(error){
                 res.status(500).send("Internal Server Error!");
             }
