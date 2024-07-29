@@ -30,6 +30,8 @@
   "author": "",
   "license": "ISC",
   "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["text", "lcov"],
     "testMatch": [
       "**/*.test.js"
     ],
@@ -37,4 +39,5 @@
       "\\\\node_modules\\\\"
     ]
   }
+  
 }
