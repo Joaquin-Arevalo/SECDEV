@@ -67,6 +67,6 @@ describe('update-payroll-controller', () => {
         expect(database.updateOne).toHaveBeenCalledWith(payroll, { Email: 'employee1@example.com', Week: 1 }, expect.any(Object));
         expect(database.updateOne).toHaveBeenCalledWith(payroll, { Email: 'employee1@example.com', Week: 0 }, expect.any(Object));
         
-       // expect(res.statusCode).toBe(200);
+       expect(res.statusCode).toBe(200);
     });
 });
