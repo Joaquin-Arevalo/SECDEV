@@ -48,6 +48,10 @@ const database = {
 
     deleteMany: async function(model, conditions) {
         return await model.deleteMany(conditions);
+    },
+
+    findOneAndDelete: async function (model, query) {
+        return await model.findOneAndDelete(query);
     }
 }
 
