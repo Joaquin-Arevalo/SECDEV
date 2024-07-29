@@ -31,7 +31,7 @@ describe('otp-controller', () => {
 
          it('should handle errors when generating OTP', async () => {
             
-            //Current_otp.findOneAndDelete.mockRejectedValue(new Error('Database Error'));
+            Current_otp.findOneAndDelete.mockRejectedValue(new Error('Database Error'));
 
             const req = httpMocks.createRequest();
             const res = httpMocks.createResponse();
@@ -78,7 +78,7 @@ describe('otp-controller', () => {
         //fail
         it('should return 500 if an error occurs during OTP verification', async () => {
             
-           // Current_otp.findOne.mockRejectedValue(new Error('Database Error'));
+            Current_otp.findOne.mockRejectedValue(new Error('Database Error'));
 
             const req = httpMocks.createRequest();
             const res = httpMocks.createResponse();
