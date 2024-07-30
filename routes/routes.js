@@ -104,6 +104,7 @@ app.get('/employee_dashboard', initial_process, employee_wfh_access, employee_da
 app.post('/employee_time_in', initial_process, employee_wfh_access, employee_clockpage_controllers.post_employee_time_in);
 app.post('/employee_time_out', initial_process, employee_wfh_access, employee_clockpage_controllers.post_employee_time_out);
 app.post('/retrieve_employee_payroll',initial_process,  employee_wfh_access, employee_dashboard_controllers.get_employee_details);
+// app.get('/salary_particulars', initial_process, employee_wfh_access, employee_salary_particulars_controllers.get_salary_particulars)
 
 //admin routes access
 app.get('/admin_dashboard', initial_process, admin_access, admin_dash_logs_controllers.get_admin_dash_logs);
@@ -126,7 +127,9 @@ app.post('/delete_forgot_password', initial_process, admin_access, forgot_passwo
 
 app.post('/update_employee_payroll', update_payroll_controllers.post_update_employee_payroll);
 
-//for emp salary particulars
+//for emp salary particulars (include the process reqs)
+// app.get('/employeee_salary_particulars', employee_salary_particulars_controllers.get_salary_particulars);
 app.get('/salary_particulars', employee_salary_particulars_controllers.get_salary_particulars);
+app.post('/print_salary_particulars', employee_salary_particulars_controllers.post_print_salary_particulars);
 
 module.exports = app;
