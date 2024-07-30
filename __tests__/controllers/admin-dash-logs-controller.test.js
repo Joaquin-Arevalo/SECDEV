@@ -1,32 +1,35 @@
 const payroll = require('../../models/payroll_model.js');
-const employee = require('../../models/employee_model.js');
 const httpMocks = require('node-mocks-http');
 const admin_dash_logs_controller = require('../../controllers/admin-dash-logs-controller.js');
 const { query } = require('express');
 const database = require('../../models/database.js');
-const admin_empman_emprecs_controller = require('../../controllers/admin-empman-emprecs-controller.js');
 
 jest.mock('../../models/database.js');
-jest.mock('../../models/employee_model.js')
 
-describe('Admin Dashboard Controller', () => {
+describe('admin_dash_logs_controller', () => {
+
+    let req, res;
+
+    beforeEach(() => {
+        req = {
+            query: {}
+        };
+
+        res = {
+            render: jest.fn(),
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn()
+        };
+    });
     describe('get_admin_dash_logs', () => {
 
         //render admin dash view
         it('should render the admin-dash-logs view', () => {
 
-            //mock request/response
-            const req = httpMocks.createRequest();
-            const res = httpMocks.createResponse();
-
-            //capture the call
-            res.render = jest.fn();
-
-            //call the method
             admin_dash_logs_controller.get_admin_dash_logs(req, res);
 
-                //check if 'render' was called
-                expect(res.render).toHaveBeenCalledWith("admin-dash-logs");
+            //assert that the page has been rendered
+            expect(res.render).toHaveBeenCalledWith('admin-dash-logs');
         });
     });
 
@@ -34,74 +37,85 @@ describe('Admin Dashboard Controller', () => {
     describe('get_employee_summary', () => {
 
         //valid test
-        it('should render the admin-dash-logs view with employee summary', async () => {
-            const req = httpMocks.createRequest({
-                query: {
-                    s_date: '2024-07-23',
-                    d_week: 'Tuesday'
-                }
-            });
+        it('should render the admin-dash-logs view with employee data', async () => { 
 
-            const res = httpMocks.createResponse();
-            res.render = jest.fn();
+            //arrange the conditions
+            const fakeData = [{
+                name: 'John Doe',
+                Mon_Date: '2024-07-30'
+            }];
 
-            //simulate data retrieved from db
-            const mockEmployeeSummary = [
-                { id: 1, Mon_Date: '2024-07-23', employee: 'John Doe' },
-                { id: 2, Tue_Date: '2024-07-23', employee: 'Jane Doe' }
-            ];
+            //simulate the request
+            req.query.s_date = '2024-07-30';
+            req.query.d_week = 'Monday'; 
 
-            database.findMany.mockResolvedValue(mockEmployeeSummary);
+            database.findMany.mockResolvedValue(fakeData);
 
             await admin_dash_logs_controller.get_employee_summary(req, res);
 
             expect(database.findMany).toHaveBeenCalledWith(payroll, {
                 $or: [
-                    { Mon_Date: '2024-07-23' },
-                    { Tue_Date: '2024-07-23' },
-                    { Wed_Date: '2024-07-23' },
-                    { Thu_Date: '2024-07-23' },
-                    { Fri_Date: '2024-07-23' },
-                    { Sat_Date: '2024-07-23' },
-                    { Sun_Date: '2024-07-23' },
+                    { Mon_Date: req.query.s_date },
+                    { Tue_Date: req.query.s_date },
+                    { Wed_Date: req.query.s_date },
+                    { Thu_Date: req.query.s_date },
+                    { Fri_Date: req.query.s_date },
+                    { Sat_Date: req.query.s_date },
+                    { Sun_Date: req.query.s_date }
                 ]
             });
 
-            expect(res.render).toHaveBeenCalledWith("admin-dash-logs", { emp_sum: mockEmployeeSummary, d_week: 'Tuesday' });
+            expect(res.render).toHaveBeenCalledWith('admin-dash-logs', { emp_sum: fakeData, d_week: req.query.d_week });
+
         });
-
+            
         //error handling
-        it('should handle errors gracefully', async () => {
-            const req = httpMocks.createRequest({
-                query: {
-                    s_date: '2024-07-03',
-                    d_week: 'Tuesday'
-                }
-            });
+        it('should handle errors gracefully and send a 500 status code', async () => {
+           
+            req.query.s_date = '2024-07-30';
+            req.query.d_week = 'Monday';
 
-            const res = httpMocks.createResponse();
-            res.render = jest.fn();
-            res.status = jest.fn().mockReturnThis();
-            res.send = jest.fn();
-
+            //simulate the error
             database.findMany.mockRejectedValue(new Error('Database Error'));
 
+            //call the method
             await admin_dash_logs_controller.get_employee_summary(req, res);
 
-            expect(database.findMany).toHaveBeenCalledWith(payroll, {
-                $or: [
-                    { Mon_Date: '2024-07-23' },
-                    { Tue_Date: '2024-07-23' },
-                    { Wed_Date: '2024-07-23' },
-                    { Thu_Date: '2024-07-23' },
-                    { Fri_Date: '2024-07-23' },
-                    { Sat_Date: '2024-07-23' },
-                    { Sun_Date: '2024-07-23' },
-                ]
-            });
-
+            //assert that the 500 status call was sent upon the error
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.send).toHaveBeenCalledWith("Internal Server Error!")
+            expect(res.send).toHaveBeenCalledWith('Internal Server Error!');
+
+        });
+
+
+        //added this
+        it('should handle different query dates correctly', async () => {
+
+            const dates = ['2024-07-23', '2024-07-24', '2024-07-25'];
+            const fakeData = { '2024-07-23': [], '2024-07-24': [], '2024-07-25': [] };
+
+            for (const date of dates) {
+                req.query.s_date = date;
+                req.query.d_week = 'Wednesday';
+
+                database.findMany.mockResolvedValue(fakeData[date]);
+
+                await admin_dash_logs_controller.get_employee_summary(req, res);
+
+                expect(database.findMany).toHaveBeenCalledWith(payroll, {
+                    $or: [
+                        { Mon_Date: date },
+                        { Tue_Date: date },
+                        { Wed_Date: date },
+                        { Thu_Date: date },
+                        { Fri_Date: date },
+                        { Sat_Date: date },
+                        { Sun_Date: date }
+                    ]
+                });
+
+                expect(res.render).toHaveBeenCalledWith('admin-dash-logs', { emp_sum: fakeData[date], d_week: req.query.d_week });
+            }
         });
     });
 });
