@@ -1,16 +1,22 @@
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("Document loaded, starting fetch for /salary_particulars");
+document.addEventListener("DOMContentLoaded", function () {
     fetch("/salary_particulars")
         .then(response => {
-            console.log("Received response from /salary_particulars", response);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.text();
         })
         .then(html => {
-            console.log("Received HTML from /salary_particulars", html);
-            document.body.innerHTML = html;
+            // Create a temporary container to hold the fetched HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            // Find the specific part of the fetched HTML you want to append
+            const fetchedContent = tempDiv.querySelector('.left-payroll.salary-container');
+
+            // Append the fetched content to the existing container
+            document.querySelector('.left-payroll.salary-container').replaceWith(fetchedContent);
+
             setupPrintFunction();
         })
         .catch(error => {
@@ -18,44 +24,35 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
     function setupPrintFunction() {
-        console.log("Setting up print function");
         var printButton = document.getElementById("print-button");
         if (printButton) {
-            console.log("Found print button, adding event listener");
             printButton.addEventListener('click', printSalaryParticular);
-        } else {
-            console.error("Print button not found");
         }
 
-        async function printSalaryParticular(event) {
+        function printSalaryParticular(event) {
             event.preventDefault();
-            console.log("Print button clicked");
 
-            try {
-                const response = await fetch('/print_salary_particulars', {
-                    method: 'POST',
-                });
-                console.log("Print request sent, response received", response);
-                showModal(); // Show custom modal
-            } catch(error) {
-                console.error("Error during print request", error);
-            }
-        }
-    }
+            const salarySlip = document.getElementById('salary-slip');
+            const employeeNameElem = document.getElementById('employee-name');
+            const employeeEmailElem = document.getElementById('employee-email');
+            const employeeTypeElem = document.getElementById('employee-type');
 
-    function showModal() {
-        var modal = document.getElementById("print-modal");
-        var closeButton = document.getElementsByClassName("close-button")[0];
-
-        modal.style.display = "block";
-
-        closeButton.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
+            if (salarySlip && employeeNameElem && employeeEmailElem && employeeTypeElem) {
+                const printWindow = window.open('', '', 'height=600,width=800');
+                printWindow.document.write('<html><head><title>Salary Particulars</title>');
+                printWindow.document.write('<link rel="stylesheet" href="/css/style.css">'); // Ensure the CSS path is correct
+                printWindow.document.write('</head><body>');
+                printWindow.document.write('<div class="salary-container">');
+                printWindow.document.write('<h1>Employee Salary Particulars</h1>');
+                printWindow.document.write('<p><strong>Name:</strong> ' + employeeNameElem.innerText + '</p>');
+                printWindow.document.write('<p><strong>Email:</strong> ' + employeeEmailElem.innerText + '</p>');
+                printWindow.document.write('<p><strong>Employee Type:</strong> ' + employeeTypeElem.innerText + '</p>');
+                printWindow.document.write(salarySlip.innerHTML);
+                printWindow.document.write('</div>');
+                printWindow.document.close();
+                printWindow.print();
+            } else {
+                console.error('Required elements not found for printing.');
             }
         }
     }
