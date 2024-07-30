@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/24</span>
+                <span class='fraction'>20/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>4/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/24</span>
+                <span class='fraction'>20/24</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -124,38 +124,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -173,39 +173,39 @@ const employee = require('../models/employee_model.js');
 const database = require('../models/database.js');
 &nbsp;
 const admin_empman_emprecs_controller = {
-    get_emprecs: <span class="fstat-no" title="function not covered" >as</span>ync function(req, res){
-        const emp_emails = <span class="cstat-no" title="statement not covered" >await database.findMany(employee, {$or: [{Employee_Type: "Employee"},{Employee_Type: "Work From Home"},{Employee_Type: "Admin"}]});</span>
+    get_emprecs: async function(req, res){
+        const emp_emails = await database.findMany(employee, {$or: [{Employee_Type: "Employee"},{Employee_Type: "Work From Home"},{Employee_Type: "Admin"}]});
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        emp_emails.sort(<span class="fstat-no" title="function not covered" >(a</span>, b) =&gt; {</span>
-            const emailA = <span class="cstat-no" title="statement not covered" >(a.Email || '').toLowerCase();</span>
-            const emailB = <span class="cstat-no" title="statement not covered" >(b.Email || '').toLowerCase();</span>
+        emp_emails.sort((a, b) =&gt; {
+            const emailA = (a.Email || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.toLowerCase();
+            const emailB = (b.Email || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.toLowerCase();
             
-<span class="cstat-no" title="statement not covered" >            return emailA.localeCompare(emailB);</span>
+            return emailA.localeCompare(emailB);
         });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    try{</span>
-<span class="cstat-no" title="statement not covered" >        res.render("admin-empman-emprecs", {emp_emails});</span>
+    try{
+        res.render("admin-empman-emprecs", {emp_emails});
     }catch (error){
 <span class="cstat-no" title="statement not covered" >        console.error("Error processing employee summary: ", error);</span>
 <span class="cstat-no" title="statement not covered" >        res.status(500).send("Internal Server Error!");</span>
     }
 },
 &nbsp;
-    post_specific_emprecs: <span class="fstat-no" title="function not covered" >as</span>ync function(req, res){
-        const emp_emails = <span class="cstat-no" title="statement not covered" >await database.findMany(employee, {$or: [{Employee_Type: "Employee"},{Employee_Type: "Work From Home"},{Employee_Type: "Admin"}]});</span>
-        const email = <span class="cstat-no" title="statement not covered" >req.body.email;</span>
+    post_specific_emprecs: async function(req, res){
+        const emp_emails = await database.findMany(employee, {$or: [{Employee_Type: "Employee"},{Employee_Type: "Work From Home"},{Employee_Type: "Admin"}]});
+        const email = req.body.email;
     
-<span class="cstat-no" title="statement not covered" >        emp_emails.sort(<span class="fstat-no" title="function not covered" >(a</span>, b) =&gt; {</span>
-            const emailA = <span class="cstat-no" title="statement not covered" >(a.Email || '').toLowerCase();</span>
-            const emailB = <span class="cstat-no" title="statement not covered" >(b.Email || '').toLowerCase();</span>
+        emp_emails.sort((a, b) =&gt; {
+            const emailA = (a.Email || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.toLowerCase();
+            const emailB = (b.Email || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.toLowerCase();
             
-<span class="cstat-no" title="statement not covered" >            return emailA.localeCompare(emailB);</span>
+            return emailA.localeCompare(emailB);
         });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const emp_sum = <span class="cstat-no" title="statement not covered" >await employee.findOne({ Email: email });</span>
+        try {
+            const emp_sum = await employee.findOne({ Email: email });
     
-<span class="cstat-no" title="statement not covered" >            res.render("admin-empman-emprecs", { emp_emails, emp_sum });</span>
+            res.render("admin-empman-emprecs", { emp_emails, emp_sum });
         } catch (error) {
 <span class="cstat-no" title="statement not covered" >            console.error("Error processing employee summary: ", error);</span>
 <span class="cstat-no" title="statement not covered" >            res.status(500).send("Internal Server Error!");</span>
@@ -220,7 +220,7 @@ module.exports = admin_empman_emprecs_controller;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-30T15:07:41.872Z
+                at 2024-07-30T15:37:43.412Z
             </div>
         <script src="../prettify.js"></script>
         <script>
