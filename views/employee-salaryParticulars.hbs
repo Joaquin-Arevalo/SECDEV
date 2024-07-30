@@ -14,7 +14,7 @@
         <div class="left-payroll salary-container" style="width: 100%; height: 88%; margin: 0; padding:0; position:absolute; top: 12%;">
             <div class="salary-par-date"> Date: {{emp_pay.Mon_Date}} - {{emp_pay.Sat_Date}} </div>
             {{!-- change the date into {{emp_pay.Mon_Date}}- {{emp_pay.Sat/sun_Date}} --}}
-            <div class="salary-par-box">
+            <div class="salary-par-box" id="salary-slip">
                  <table class="salary-pars-table">
                     <tr>
                         <td>&nbsp;</td>
@@ -71,10 +71,16 @@
                 <button type="button" id="print-button">Print</button>
             </div>
         </div>
-        
     </div>
 
+    <div id="employee-name" style="display: none;">John Doe</div>
+    <div id="employee-email" style="display: none;">john.doe@example.com</div>
+    <div id="employee-type" style="display: none;">Employee</div>
+
     {{> empsidenav}}
-<script src="/js/salary-particulars.js"></script>    
+
+
+
+    <script src="/js/salary-particulars.js"></script>    
 </body>
 </html>

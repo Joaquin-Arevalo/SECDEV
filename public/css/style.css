@@ -451,6 +451,26 @@ body{
 .admin-rightdash-mid button{
     width: 90%;
 }
+/* changes */
+.admin-rightdash-bottom h2 a {
+    color: var(--green-m); /* Use the green color variable */
+    font-family: 'Archivo', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none; /* Remove underline */
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.admin-rightdash-bottom h2 a:hover {
+    background-color: var(--gray);
+    cursor: pointer;
+}
+.admin-rightdash-bottom h2 a:active {
+    background-color: var(--lightgray);
+}
+/* changes end here */
 .admin-leftdash{
     margin: 0.5vh 0.5vw 0.5vh 0.5vw;
 }
@@ -470,9 +490,23 @@ body{
     margin-top:10px;
     border-radius: 15px;
     color:white;
+    cursor: pointer; /* Show pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+    margin-right: 20px;
+    display: inline-block;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+.page-title:hover {
+    background-color: var(--green-d); /* Slightly darker green on hover */
+}
+.page-title:active {
+    background-color: var(--gray); /* Different color when active */
 }
 .title-wrapper{
     border: solid 1px black;
+    display: flex; /* Use flexbox to align items */
+    justify-content: center; /* Center buttons horizontally */
+    align-items: center; /* Center buttons vertically */
 }
 .dropdown{
     display: flex;
@@ -611,6 +645,8 @@ body{
 .num-input{
     display: flex;
     flex-direction: row;
+    align-items: center; /* Center items vertically */
+    box-sizing: border-box; /* Include padding and border in width */
 }
 .num-input p{
     margin: 0;
@@ -653,6 +689,7 @@ body{
 .num-input-1{
     display: flex;
     flex-direction: row;
+    align-items: center; /* Center items vertically */
     justify-content: space-between;
     width: 100%;
     padding: 0px 18px 3px 18px;
@@ -661,6 +698,25 @@ body{
     margin-bottom: 2vh;
     font-size: 2.5vh;
 }
+/* changes */
+.num-input button,
+.num-input-1 button {
+    background-color: var(--green-m);
+    color: white;
+    cursor: pointer;
+    margin-left: 10px; /* Space between input and button */
+}
+
+.num-input button:hover,
+.num-input-1 button:hover {
+    background-color: var(--green-d);
+}
+
+.num-input button:active,
+.num-input-1 button:active {
+    background-color: var(--gray);
+}
+/* changes ends here */
 .empman-btm h1{
     color: var(--green-m);
     margin-top: 5vh;
@@ -710,15 +766,22 @@ body{
 .emp-info div{
     width: 100%;
 }
-.emp-info input{
+/* changes */
+
+.emp-info input,
+.emp-info select{
     font-family: 'Archivo', sans-serif;
     background-color: var(--white-m);
-    width: 70%;
+    width: calc(100% - 40px);
+    max-width: 500px; /* Set a consistent max-width */
     font-size: 2vh;
     border: 1px solid;
     border-radius: 5px;
-    padding: .5vh;
+    padding: 1vh; /* Increased padding for better UI */
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+    margin-top: 5px; /* Adds space between input fields */
 }
+/* changes end here */
 .ad-left-btn{
     display: flex;
     width: 100%;
@@ -837,4 +900,103 @@ body{
     border-radius: 30%;
     border-color: #7CA84A;
     border-style: solid;
+}
+
+/*pop up window*/
+/* Add this CSS to your stylesheet */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 1px solid #86B745; /* Add border color */
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 50%;
+}
+
+.close-button {
+    align-self: flex-end;
+    cursor: pointer;
+    font-size: 24px;
+    color: #aaa;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+.modal p {
+    font-size: 28px; /* Increase font size */
+    font-weight: bold; /* Make text bold */
+    color: #333; /* Darken the text color */
+    margin: 5px 0 0 0; /* Adjust margin to move text upwards */
+    padding: 5px 0; /* Adjust padding to balance the positioning */
+}
+
+.modal-content {
+    text-align: center; /* Center the text */
+}
+
+
+/*print pop uppp*/
+@media print {
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        color: #000;
+    }
+
+    .salary-container {
+        width: 100%;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    p {
+        margin: 5px 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 8px;
+        border: 1px solid #ccc;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    /* Hide non-printable elements */
+    .printBtn,
+    .modal {
+        display: none;
+    }
 }
