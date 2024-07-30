@@ -1,35 +1,62 @@
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("Document loaded, starting fetch for /salary_particulars");
     fetch("/salary_particulars")
-    .then(response =>{
-        if (!response.ok){
-            throw new Error(`HTTP error! Status: ${response.status}`);
+        .then(response => {
+            console.log("Received response from /salary_particulars", response);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(html => {
+            console.log("Received HTML from /salary_particulars", html);
+            document.body.innerHTML = html;
+            setupPrintFunction();
+        })
+        .catch(error => {
+            console.error('Error fetching /salary_particulars', error);
+        });
+
+    function setupPrintFunction() {
+        console.log("Setting up print function");
+        var printButton = document.getElementById("print-button");
+        if (printButton) {
+            console.log("Found print button, adding event listener");
+            printButton.addEventListener('click', printSalaryParticular);
+        } else {
+            console.error("Print button not found");
         }
-        return response.text();
-    })
-    .then(html =>{
-        document.body.innerHTML = html;
-        print_function();
-    })
-    .catch(error =>{
-        console.error('Error fetching /salary_paraticulars', error);
-    });
 
-    function print_function(){
-        var print_button = document.getElementById("print-button");
-        print_button.addEventListener('click', print_salary_particular);
-
-        async function print_salary_particular(event){
+        async function printSalaryParticular(event) {
             event.preventDefault();
+            console.log("Print button clicked");
 
-            try{
+            try {
                 const response = await fetch('/print_salary_particulars', {
                     method: 'POST',
                 });
-            }catch(error){
-                console.error(error);
+                console.log("Print request sent, response received", response);
+                showModal(); // Show custom modal
+            } catch(error) {
+                console.error("Error during print request", error);
             }
         }
     }
 
-    
+    function showModal() {
+        var modal = document.getElementById("print-modal");
+        var closeButton = document.getElementsByClassName("close-button")[0];
+
+        modal.style.display = "block";
+
+        closeButton.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
 });

@@ -86,13 +86,15 @@ body{
     background-color: var(--white-hov);
     cursor: pointer;
 }
-.log-buttons button:active{
+.log-buttons button:active {
     background-color: var(--gray);
     cursor: pointer;
-    p{
-        color: white;
-    }
 }
+
+.log-buttons button:active p {
+    color: white;
+}
+
 .log-buttons button:disabled{
     pointer-events: none;
 }
@@ -381,23 +383,27 @@ body{
 .pw-icon:hover{
     cursor: pointer;
 }
-.login-right div{
+.login-right div {
     display: flex;
     justify-content: center;
-    p{
-        color: var(--green-m);
-        text-align: center;
-        margin-top: 0;
-    }
-    p:hover{
-        color: var(--lightergray);
-        cursor: pointer;
-    }
-    p:active{
-        color: var(--lightgray);
-        cursor: pointer;
-    }
 }
+
+.login-right div p {
+    color: var(--green-m);
+    text-align: center;
+    margin-top: 0;
+}
+
+.login-right div p:hover {
+    color: var(--lightergray);
+    cursor: pointer;
+}
+
+.login-right div p:active {
+    color: var(--lightgray);
+    cursor: pointer;
+}
+
 .login-right button{
     color: var(--white-m);
     display: flex;
@@ -837,4 +843,55 @@ body{
     border-radius: 30%;
     border-color: #7CA84A;
     border-style: solid;
+}
+
+
+
+/*pop up window*/
+/* Add this CSS to your stylesheet */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 1px solid #86B745; /* Add border color */
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 50%;
+}
+
+.close-button {
+    align-self: flex-end;
+    cursor: pointer;
+    font-size: 24px;
+    color: #aaa;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+.modal p {
+    font-size: 28px; /* Increase font size */
+    font-weight: bold; /* Make text bold */
+    color: #333; /* Darken the text color */
+    margin: 5px 0 0 0; /* Adjust margin to move text upwards */
+    padding: 5px 0; /* Adjust padding to balance the positioning */
+}
+
+.modal-content {
+    text-align: center; /* Center the text */
 }
