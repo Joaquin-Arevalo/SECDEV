@@ -6,104 +6,132 @@ const admin_empman_emprecs_controller = require('../../controllers/admin-empman-
 jest.mock('../../models/database.js');
 jest.mock('../../models/employee_model.js');
 
-beforeEach(() => {
-    jest.clearAllMocks();
-});
+describe('admin_empman_emprecs_controller', () => {
+    let req, res;
+    describe('get_emprecs', () => {
 
-describe('get_emprecs', () => {
-    it('should render employee management page with employee details', async () => {
-
-        //setup
-        const employees = [
-            { Email: 'b@example.com', Employee_Type: 'Employee' },
-            { Email: 'a@example.com', Employee_Type: 'Admin' }
-        ];
-
-        database.findMany.mockResolvedValue(employees);
-
-        const req = httpMocks.createRequest();
-        const res = httpMocks.createResponse();
-        res.render = jest.fn();
-
-        //execute
-        await admin_empman_emprecs_controller.get_emprecs(req, res);
-
-        //verify
-        expect(database.findMany).toHaveBeenCalledWith(employee, { $or: [{ Employee_Type: "Employee" }, { Employee_Type: "Work From Home" }, { Employee_Type: "Admin" }] });
-        expect(res.render).toHaveBeenCalledWith("admin-empman-emprecs", { emp_emails: employees });
-    });
-
-    //failed
-    it('should handle errors and return 500 status code', async () => {
-        const req = httpMocks.createRequest();
-        const res = httpMocks.createResponse();
-
-        res.status = jest.fn().mockReturnThis();
-        res.send = jest.fn();
-
-        database.findMany.mockRejectedValue(new Error('Database Error'));
-
-        await admin_empman_emprecs_controller.get_emprecs(req, res);
-
-        expect(database.findMany).toHaveBeenCalledWith(employee, { $or: [{ Employee_Type: "Employee" }, { Employee_Type: "Work From Home" }, { Employee_Type: "Admin" }] });
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith("Internal Server Error!");
-    });
-
-});
-
-describe('post_specific_emprecs', () => {
-    it('should render admin-empman-emprecs with sorted employee emails and specific employee summary', async () => {
-        const req = httpMocks.createRequest({
-            method: 'POST',
-            body: { email: 'a@example.com' }
+        beforeEach(() => {
+            req = {};
+            res = {
+                render: jest.fn(),
+                status: jest.fn().mockReturnThis(),
+                send: jest.fn()
+            };
         });
 
-        const res = httpMocks.createResponse();
-        const mockEmployees = [
-            { Email: 'z@example.com', Employee_Type: 'Employee' },
-            { Email: 'a@example.com', Employee_Type: 'Work From Home' },
-            { Email: 'm@example.com', Employee_Type: 'Admin' },
-        ];
-
-        const mockEmployeeSummary = { Email: 'a@example.com', Name: 'Alice' };
-
-        database.findMany.mockResolvedValue(mockEmployees);
-        employee.findOne.mockResolvedValue(mockEmployeeSummary);
-
-        await admin_empman_emprecs_controller.post_specific_emprecs(req, res);
-
-        expect(database.findMany).toHaveBeenCalledWith(employee, { $or: [{ Employee_Type: "Employee" }, { Employee_Type: "Work From Home" }, { Employee_Type: "Admin" }] });
-        expect(employee.findOne).toHaveBeenCalledWith({ Email: 'a@example.com' });
-        expect(res._getRenderView()).toBe('admin-empman-emprecs');
-        expect(res._getRenderData()).toEqual({
-            emp_emails: [
+        it('should render the admin-empman-emprecs view with sorted employee emails', async () => {
+            //Arrange the conditions
+            const mockEmployees = [
+                { Email: 'c@example.com', Employee_Type: 'Employee' },
                 { Email: 'a@example.com', Employee_Type: 'Work From Home' },
-                { Email: 'm@example.com', Employee_Type: 'Admin' },
-                { Email: 'z@example.com', Employee_Type: 'Employee' },
-            ],
-            emp_sum: mockEmployeeSummary,
+                { Email: 'b@example.com', Employee_Type: 'Admin'}
+            ];
 
-        });
+            database.findMany.mockResolvedValue(mockEmployees);
+
+            await admin_empman_emprecs_controller.get_emprecs(req, res);
+
+            //expected response
+            const sorted = [
+                { Email: 'a@example.com', Employee_Type: 'Work From Home' },
+                { Email: 'b@example.com', Employee_Type: 'Admin' },
+                { Email: 'c@example.com', Employee_Type: 'Employee' }
+            ]
+
+            //render the page with sorted emails
+            expect(res.render).toHaveBeenCalledWith('admin-empman-emprecs', { emp_emails: sorted });
+
+            //check that the query has been made in the right model and the query should match any of the conditions specified 
+            expect(database.findMany).toHaveBeenCalledWith(employee, {
+                $or: [
+                    { Employee_Type: 'Employee' },
+                    { Employee_Type: 'Work From Home' },
+                    { Employee_Type: 'Admin' }
+                ]
+            });
+
+
+        })
+
+        //failed 
+        it('should handle errors gracefully', async () => {            
+            //simulate the error
+            database.findMany.mockRejectedValue(new Error('Database Error'));
+
+            await admin_empman_emprecs_controller.get_emprecs(req, res);
+
+            //assert that the 500 status code was sent
+            expect(res.status).toHaveBeenCalledWith(500);
+
+            //assert that the error message was sent
+            expect(res.send).toHaveBeenCalledWith('Internal Server Error!');
+        })
+
     });
+    
+    describe('post_specific_emprecs', () => {
 
-    //failed
-    it('should handle errors and return 500 status code', async () => {
-        const req = httpMocks.createRequest({
-            method: 'POST',
-            body: { email: 'a@example.com' }
+        //initialize req and res that will be used for each test case
+        beforeEach(() => {
+            req = { body: { email: 'a@example.com' } };
+            res = {
+                render: jest.fn(),
+                status: jest.fn().mockReturnThis(),
+                send: jest.fn()
+            };
         });
 
-        const res = httpMocks.createResponse();
-        res.status = jest.fn().mockReturnThis();
-        res.send = jest.fn();
+        it('should render the admin-empman-emprecs view with specific employee details', async () => {
+            
+            const mockEmployees = [
+                { Email: 'c@example.com', Employee_Type: 'Employee' },
+                { Email: 'a@example.com', Employee_Type: 'Work From Home' },
+                { Email: 'b@example.com', Employee_Type: 'Admin' }
+            ];
 
-        database.findMany.mockRejectedValue(new Error('Database Error'));
+            //sample pecific employee data
+            const mockEmployeeDetails = { Email: 'a@example.com', Employee_Type: 'Work From Home', Name: 'Alice' };
 
-        await admin_empman_emprecs_controller.post_specific_emprecs(req, res);
+            database.findMany.mockResolvedValue(mockEmployees);
+            employee.findOne.mockResolvedValue(mockEmployeeDetails);
 
-        expect(database.findMany).toHaveBeenCalledWith(employee, { $or: [{ Employee_Type: "Employee" }, { Employee_Type: "Work From Home" }, { Employee_Type: "Admin" }] });
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith("Internal Server Error!");
+            await admin_empman_emprecs_controller.post_specific_emprecs(req, res);
+
+            //the correct table [employee] should be used
+            expect(database.findMany).toHaveBeenCalledWith(employee, {
+                $or: [
+                    { Employee_Type: 'Employee' },
+                    { Employee_Type: 'Work From Home' },
+                    { Employee_Type: 'Admin' }
+                ]
+            });
+
+            //expected sorted employee emails
+            const sortedEmails = [
+                { Email: 'a@example.com', Employee_Type: 'Work From Home' },
+                { Email: 'b@example.com', Employee_Type: 'Admin' },
+                { Email: 'c@example.com', Employee_Type: 'Employee' }
+            ];
+
+            //the correct employee details should be returned
+            expect(employee.findOne).toHaveBeenCalledWith({ Email: req.body.email });
+
+            //the page should display sorted employee emails
+            expect(res.render).toHaveBeenCalledWith('admin-empman-emprecs', { emp_emails: sortedEmails, emp_sum: mockEmployeeDetails });
+        });
+
+        it('should handle errors gracefully', async () => {
+
+            //method would return an empty array 
+            database.findMany.mockResolvedValue([]);
+
+            //simulate error
+            employee.findOne.mockRejectedValue(new Error('Database Error'));
+
+            await admin_empman_emprecs_controller.post_specific_emprecs(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.send).toHaveBeenCalledWith('Internal Server Error!');
+        });
     });
 });
