@@ -22,7 +22,7 @@ const register_controllers = require('../controllers/register-controller');
 
 //for salary particulars page
 const employee_salary_particulars_controllers = require('../controllers/employee-salary-particulars-controller.js');
-
+const admin_salary_particulars_controllers = require('../controllers/admin-salary-particulars-controller.js');
  
 const express = require('express');
 const app = express();
@@ -132,4 +132,11 @@ app.post('/update_employee_payroll', update_payroll_controllers.post_update_empl
 app.get('/salary_particulars', employee_salary_particulars_controllers.get_salary_particulars);
 app.post('/print_salary_particulars', employee_salary_particulars_controllers.post_print_salary_particulars);
 
+app.get('/admin_salary_particulars', admin_salary_particulars_controllers.get_salary_particulars);
+app.get('/admin_retrieve_employee_total_sp', admin_salary_particulars_controllers.get_emp_total);
+app.get('/admin_salary_particulars_employee', admin_salary_particulars_controllers.get_salary_particulars_employee);
+app.post('/admin_print_salary_particulars', admin_salary_particulars_controllers.post_print_salary_particulars);
+
 module.exports = app;
+
+//get_salary_particulars_details
