@@ -103,7 +103,8 @@ const admin_empman_payroll_controller = {
         let regular_holiday = ["01-01", "03-28", "03-29", "04-09", "05-01", "06-12", "08-26", "11-30", "12-25", "12-30",];
         let special_holiday = ["02-10", "03-30", "08-21", "11-01", "11-02", "12-08", "12-24", "12-31"];
 
-        function is_regular_holiday(date){
+        function is_regular_holiday(date) {
+            
             let month_day = date.slice(5, 10);
             return regular_holiday.includes(month_day);
         }

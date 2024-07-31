@@ -10,6 +10,7 @@ describe('admin_dash_logs_controller', () => {
 
     let req, res;
 
+    //initialize req and res that will be used in each test case
     beforeEach(() => {
         req = {
             query: {}
@@ -91,17 +92,21 @@ describe('admin_dash_logs_controller', () => {
         //added this
         it('should handle different query dates correctly', async () => {
 
+            //check for data in each date 
             const dates = ['2024-07-23', '2024-07-24', '2024-07-25'];
             const fakeData = { '2024-07-23': [], '2024-07-24': [], '2024-07-25': [] };
 
+            //iterate over the sample dates 
             for (const date of dates) {
                 req.query.s_date = date;
                 req.query.d_week = 'Wednesday';
 
+                //simulate the query
                 database.findMany.mockResolvedValue(fakeData[date]);
 
                 await admin_dash_logs_controller.get_employee_summary(req, res);
 
+                //the query should be performed in the correct table [payroll]
                 expect(database.findMany).toHaveBeenCalledWith(payroll, {
                     $or: [
                         { Mon_Date: date },
@@ -114,6 +119,7 @@ describe('admin_dash_logs_controller', () => {
                     ]
                 });
 
+                //render the page with the correct data
                 expect(res.render).toHaveBeenCalledWith('admin-dash-logs', { emp_sum: fakeData[date], d_week: req.query.d_week });
             }
         });
