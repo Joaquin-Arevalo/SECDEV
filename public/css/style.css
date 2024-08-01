@@ -550,6 +550,12 @@ body{
 #popup-4 .content{
     height: 150px;
 }
+#popup-5 .content{
+    height: 150px;
+}
+#popup-6 .content{
+    height: 150px;
+}
 .popup .close-btn{
     cursor: pointer;
     position: absolute;
@@ -689,6 +695,17 @@ body{
     padding: 3vh 3vh 3vh 3vh;
     background-color: var(--white-m);
 }
+.info-container p {
+    display: flex;
+    align-items: center;
+}
+
+.label {
+    font-weight: bold;
+    width: 150px; /* Adjust based on your layout */
+    display: inline-block;
+}
+
 .container{
     width: 94%;
     height: 100%;
@@ -703,6 +720,7 @@ body{
     padding: 5vh 5vh 5vh 5vh;
     margin-left: 0;
     font-size: 2.5vh;
+    color: black;
     background-color: var(--green-l);
     border-radius: 15px;
     border: 1px var(--green-d) solid;

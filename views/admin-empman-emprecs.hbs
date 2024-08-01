@@ -6,44 +6,46 @@
     <link rel="icon" type="image/x-icon" href="/css/images/greenatwork-logo.png">
     <script src="/js/script.js"></script> 
 </head>
-<body>
-<div class="left-payroll admin-leftdash">
+<body style="display: flex; flex-direction: row;">
+<div class="left-payroll admin-leftdash" style="margin:0; display: flex; flex-direction: column; width: 100%; background-color: var(--background);">
     <div class="admin-leftdash-top">
         <div class="title-container">
-            <div class="page-title title-wrapper" id="emp-info" style="transform: translate(10px, 3px)">
+            <div class="page-title title-wrapper" id="emp-info" style="transform: translate(10px, 3px);" >
                 <h2>Employee Information</h2>
             </div>
             <div class="page-title title-wrapper" id="weekly-payroll">
                 <h2>Weekly Payroll</h2>
             </div>
         </div>
-        <div class="empman-header">
-            <div class="dropdown">
-                <label>Employee:</label>
-                <select onchange="displayInfo();" id="selectedEmployee">
-                    <option id="current-emp-option">Select Employee</option>
-                {{#each emp_emails}}
-                    {{!-- <option>{{this.Last_Name}} - {{this.Email}}</option> --}}
-                    <option>{{this.Email}}</option>
-                {{/each}}
-                </select>
-                
-            </div>  
-        </div>
-        <div class="emp-info">
-            <div><!-- Placeholder info -->
-                <p>First Name: <span>{{emp_sum.First_Name}}</span></p>
-                <p>Last Name: <span>{{emp_sum.Last_Name}}</span></p>
-                <p>Address: <span>{{emp_sum.Address}}</span></p> 
-                <p>Contact Number: <span>{{emp_sum.Contact_Number}}</span></p> 
-              </div>
-              <div>
-                <p>Email: <span>{{emp_sum.Email}}</span></p> 
-                <p>Password: <span>{{emp_sum.Password}}</span></p>
-                <p>Role: <span>{{emp_sum.Employee_Type}}</span></p>
-                <h2>Time-In Status: <span class="status-on">{{emp_sum.IsTimedIn}}</span></h2> 
-              </div>
+        <div class="container" style="z-index: 1;">
+            <div class="empman-header">
+                <div class="dropdown">
+                    <label>Employee:</label>
+                    <select onchange="displayInfo();" id="selectedEmployee">
+                        <option id="current-emp-option">Select Employee</option>
+                    {{#each emp_emails}}
+                        {{!-- <option>{{this.Last_Name}} - {{this.Email}}</option> --}}
+                        <option>{{this.Email}}</option>
+                    {{/each}}
+                    </select>
+                    
+                </div>  
+                <div style="width: 30%;">
+                    <h2 style="color: black;">Time-In Status: <span class="status-on">{{emp_sum.IsTimedIn}}</span></h2>
+                </div>
+            </div>
+            <div class="emp-info">
+                <div class="info-container">
+                    <p><span class="label">First Name:</span> <span class="value">{{emp_sum.First_Name}}</span></p>
+                    <p><span class="label">Last Name:</span> <span class="value">{{emp_sum.Last_Name}}</span></p>
+                    <p><span class="label">Address:</span> <span class="value">{{emp_sum.Address}}</span></p> 
+                    <p><span class="label">Contact Number:</span> <span class="value">{{emp_sum.Contact_Number}}</span></p> 
+                    <p><span class="label">Email:</span> <span class="value">{{emp_sum.Email}}</span></p> 
+                    <p><span class="label">Password:</span> <span class="value">{{emp_sum.Password}}</span></p>
+                    <p><span class="label">Role:</span> <span class="value">{{emp_sum.Employee_Type}}</span></p> 
+            </div>
 
+            </div>
         </div>
     </div>
     
