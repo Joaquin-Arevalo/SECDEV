@@ -7,51 +7,72 @@ jest.mock('../../models/employee_model.js');
 jest.mock('../../models/payroll_model.js');
 
 describe('register-controller', () => {
+    let req, res;
+
+    beforeEach(() => {
+        req = {
+            body: {
+                firstName: 'John',
+                lastName: 'Doe',
+                address: '123 Elm Street',
+                contactNumber: '1234567890',
+                email: 'john.doe@example.com',
+                password: 'password123',
+                employee_type: 'Employee'
+            }
+        };
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+            render: jest.fn()
+        };
+    });
 
     describe('get_register', () => {
 
         it('should render the register page', () => {
 
-            const req = httpMocks.createRequest();
-            const res = httpMocks.createResponse();
-            const renderSpy = jest.spyOn(res, 'render');
-
             register_controller.get_register(req, res);
-
-            expect(renderSpy).toHaveBeenCalledWith('register');
+            //verify that the correct page was rendered
+            expect(res.render).toHaveBeenCalledWith('register');
         });
     });
 
     describe('post_register', () => {
 
-        let req, res;
+        it('should register a new employee and create initial payroll records', async () => {
 
-        beforeEach(() => {
-            req = httpMocks.createRequest();
-            res = httpMocks.createResponse();
-        });
+            //assume there is no existing user
+            employee.findOne.mockResolvedValue(null); 
 
-        it('should return 400 if email already exists', async () => {
-            
-            req.body = {
-                email: 'test@example.com',
-                password: 'password123',
-                firstName: 'John',
-                lastName: 'Doe',
-                address: '123 Street',
-                contactNumber: '1234567890',
-                employee_type: 'Employee'
-            };
-
-            employee.findOne.mockResolvedValue({});
+            //save the new data
+            employee.prototype.save.mockResolvedValue();
+            payroll.prototype.save.mockResolvedValue(); 
 
             await register_controller.post_register(req, res);
 
-            expect(res.statusCode).toBe(400);
-            expect(res._getData()).toEqual(JSON.stringify({ message: "Email Already Exists!" }));
+            // Verify employee and payroll creation
+            expect(employee.findOne).toHaveBeenCalledWith({ Email: req.body.email });
+            expect(employee.prototype.save).toHaveBeenCalled();
+            expect(payroll.prototype.save).toHaveBeenCalledTimes(3); //one for each week
+
+            // Verify response
+            expect(res.json).toHaveBeenCalledWith({ success: true, message: "Registration Successful!" });
         });
 
-        it('should return 400 if password is missing', async () => {
+        it('should return an error if the email already exists', async () => {
+
+            //user already exists
+            employee.findOne.mockResolvedValue({}); 
+
+            await register_controller.post_register(req, res);
+
+            // Verify error response 
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({ message: "Email Already Exists!" });
+        });
+
+        it('should return an error if password is missing', async () => {
             req.body = {
                 email: 'test@example.com',
                 password: '', //missing pw
@@ -62,71 +83,28 @@ describe('register-controller', () => {
                 employee_type: 'Employee'
             };
 
+            //assume the employee does not exist
             employee.findOne.mockResolvedValue(null);
 
             await register_controller.post_register(req, res);
 
-            expect(res.statusCode).toBe(400);
-            expect(res._getData()).toEqual(JSON.stringify({ message: "Missing Password!" }));
+            //verify status code and message
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({ message: "Missing Password!" });
         });
 
-        it('should create a new employee and payroll record', async () => {
-            req.body = {
-                email: 'test@example.com',
-                password: 'password123',
-                firstName: 'John',
-                lastName: 'Doe',
-                address: '123 Street',
-                contactNumber: '1234567890',
-                employee_type: 'Employee'
-            };
+        it('should handle errors during employee save', async () => {
 
-            employee.findOne.mockResolvedValue(null); //new email
-            
-            const saveMock = jest.fn().mockResolvedValue({});
-            employee.mockImplementation(() => ({
-                save: saveMock
-            }));
-
-            const payrollSaveMock = jest.fn().mockResolvedValue({});
-            payroll.mockImplementation(() => ({
-                save: payrollSaveMock
-            }));
+            //assume the user does not yet exist
+            employee.findOne.mockResolvedValue(null); 
+            //simulate error
+            employee.prototype.save.mockRejectedValue(new Error('Database error')); // Simulate save failure
 
             await register_controller.post_register(req, res);
 
-            expect(employee.findOne).toHaveBeenCalledWith({ Email: 'test@example.com' });
-            expect(saveMock).toHaveBeenCalled();
-
-            expect(payroll.mock.instances.length).toBeGreaterThanOrEqual(3);
-            expect(payrollSaveMock).toHaveBeenCalledTimes(3);
-
-            expect(res.statusCode).toBe(200);
-            expect(res._getData()).toEqual(JSON.stringify({ success: true, message: "Registration Successful!" }));
-        });
-
-        it('should hander errors during registration', async () => {
-            req.body = {
-                email: 'test@example.com',
-                password: 'password123',
-                firstName: 'John',
-                lastName: 'Doe',
-                address: '123 Street',
-                contactNumber: '1234567890',
-                employee_type: 'Employee'
-            };
-
-            employee.findOne.mockResolvedValue(null);
-
-            employee.mockImplementation(() => ({
-                save: jest.fn().mockRejectedValue(new Error('Database Error'))
-            }));
-
-            await register_controller.post_register(req, res);
-
-            expect(employee.findOne).toHaveBeenCalledWith({ Email: 'test@example.com' });
-            expect(res.statusCode).toBe(500);
-            expect(res._getData()).toEqual(JSON.stringify({ success: false, message: "Registration Controller Error!" }));
+            // Verify status code and message
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ message: 'Registration Controller Error!' , success: false});
         });
     });
 });

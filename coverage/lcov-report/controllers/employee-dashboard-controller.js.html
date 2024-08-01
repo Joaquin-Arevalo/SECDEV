@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">98.41% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>45/63</span>
+                <span class='fraction'>62/63</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.25% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>13/16</span>
+                <span class='fraction'>14/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.96% </span>
+                <span class="strong">98.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>44/62</span>
+                <span class='fraction'>61/62</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -210,33 +210,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -298,31 +298,31 @@ const employee_dashboard_controller = {
                 }
             }
 &nbsp;
-            function <span class="fstat-no" title="function not covered" >padZero(</span>num){
-<span class="cstat-no" title="statement not covered" >                if (num &lt; 10){</span>
+            function padZero(num){
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (num &lt; 10){
 <span class="cstat-no" title="statement not covered" >                    num = "0" + num</span>
                 }
-<span class="cstat-no" title="statement not covered" >                return num</span>
+                return num
             }
 &nbsp;
             emp_det.Mon_Minutes =  padZero(emp_det.Mon_Minutes.toString());
-<span class="cstat-no" title="statement not covered" >            emp_det.Tue_Minutes =  padZero(emp_det.Tue_Minutes.toString());</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Wed_Minutes =  padZero(emp_det.Wed_Minutes.toString());</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Thu_Minutes =  padZero(emp_det.Thu_Minutes.toString());</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Fri_Minutes =  padZero(emp_det.Fri_Minutes.toString());</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Sat_Minutes =  padZero(emp_det.Sat_Minutes.toString());</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Sun_Minutes =  padZero(emp_det.Sun_Minutes.toString());</span>
+            emp_det.Tue_Minutes =  padZero(emp_det.Tue_Minutes.toString());
+            emp_det.Wed_Minutes =  padZero(emp_det.Wed_Minutes.toString());
+            emp_det.Thu_Minutes =  padZero(emp_det.Thu_Minutes.toString());
+            emp_det.Fri_Minutes =  padZero(emp_det.Fri_Minutes.toString());
+            emp_det.Sat_Minutes =  padZero(emp_det.Sat_Minutes.toString());
+            emp_det.Sun_Minutes =  padZero(emp_det.Sun_Minutes.toString());
             
-<span class="cstat-no" title="statement not covered" >            emp_det.Mon_Total_Pay = emp_det.Mon_Total_Pay.toFixed(2);</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Tue_Total_Pay = emp_det.Tue_Total_Pay.toFixed(2);</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Wed_Total_Pay = emp_det.Wed_Total_Pay.toFixed(2);</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Thu_Total_Pay = emp_det.Thu_Total_Pay.toFixed(2);</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Fri_Total_Pay = emp_det.Fri_Total_Pay.toFixed(2);</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Sat_Total_Pay = emp_det.Sat_Total_Pay.toFixed(2);</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Sun_Total_Pay = emp_det.Sun_Total_Pay.toFixed(2);</span>
-<span class="cstat-no" title="statement not covered" >            emp_det.Weekly_Total_Pay = emp_det.Weekly_Total_Pay.toFixed(2);</span>
+            emp_det.Mon_Total_Pay = emp_det.Mon_Total_Pay.toFixed(2);
+            emp_det.Tue_Total_Pay = emp_det.Tue_Total_Pay.toFixed(2);
+            emp_det.Wed_Total_Pay = emp_det.Wed_Total_Pay.toFixed(2);
+            emp_det.Thu_Total_Pay = emp_det.Thu_Total_Pay.toFixed(2);
+            emp_det.Fri_Total_Pay = emp_det.Fri_Total_Pay.toFixed(2);
+            emp_det.Sat_Total_Pay = emp_det.Sat_Total_Pay.toFixed(2);
+            emp_det.Sun_Total_Pay = emp_det.Sun_Total_Pay.toFixed(2);
+            emp_det.Weekly_Total_Pay = emp_det.Weekly_Total_Pay.toFixed(2);
         
-<span class="cstat-no" title="statement not covered" >            res.render("employee-dashboard", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex, emp_det, emp_rec, Total_Hour_Rate, Total_Minute_Rate});</span>
+            res.render("employee-dashboard", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex, emp_det, emp_rec, Total_Hour_Rate, Total_Minute_Rate});
         }catch(error){
             console.error("Error processing employee details: ", error);
             res.status(500).send("Internal Server Error!");
@@ -337,7 +337,7 @@ module.exports = employee_dashboard_controller;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-30T15:37:43.412Z
+                at 2024-08-01T16:07:44.851Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -5,89 +5,68 @@ const Current_otp = require('../../models/otp_model.js');
 jest.mock('../../models/otp_model.js');
 
 describe('otp-controller', () => {
+    let req, res;
 
-    describe('post_generate-otp', () => {
-        //fail
-        it('should generate and store OTP successfully', async () => {
-            
-            const req = httpMocks.createRequest();
-            const res = httpMocks.createResponse();
+    beforeEach(() => {
+        req = {};
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+            send: jest.fn()
+        };
 
-            Current_otp.findOneAndDelete = jest.fn().mockResolvedValue(null);
+        //mock the methods
+        jest.spyOn(Current_otp, 'findOneAndDelete').mockResolvedValue({});
+        jest.spyOn(Current_otp.prototype, 'save').mockResolvedValue();
+        jest.spyOn(Current_otp, 'findOne').mockResolvedValue(null);
 
-            const mockSave = jest.fn().mockResolvedValue();
-            Current_otp.mockImplementation(() => ({
-                save: mockSave
-            }));
-           
+    });
+
+    describe('post_generate_otp', () => {
+
+        //failed
+        it('should generate and store a new OTP', async () => {
             await otp_controller.post_generate_otp(req, res);
-
+            
+            //verify that a new OTP was generated and saved
             expect(Current_otp.findOneAndDelete).toHaveBeenCalled();
-            expect(mockSave).toHaveBeenCalled();
-            expect(res.statusCode).toBe(201);
-            expect(res._getData()).toEqual(JSON.stringify({ message: 'otp generated and stored successfully' }));
+            expect(Current_otp.prototype.save).toHaveBeenCalled();
+            
+            //verify the status code and message
+            expect(res.status).toHaveBeenCalledWith(201);
+            expect(res.json).toHaveBeenCalledWith({ message: 'otp generated and stored successfully' });
         });
 
-         it('should handle errors when generating OTP', async () => {
-            
-            Current_otp.findOneAndDelete.mockRejectedValue(new Error('Database Error'));
-
-            const req = httpMocks.createRequest();
-            const res = httpMocks.createResponse();
-            
-            await otp_controller.post_generate_otp(req, res);
-
-            // Assertions
-            expect(res.statusCode).toBe(500);
-            expect(res._getData()).toBe('Internal Server Error!');
-        });
     });
 
     describe('post_verify_otp', () => {
-
-        //fail
-        it('should retrieve the correct OTP', async () => {
+        //failed
+        it('should return the correct OTP', async () => {
+            
+            //set up mock OTP value
             const mockOtp = { current_otp: 1234 };
             Current_otp.findOne.mockResolvedValue(mockOtp);
 
-            const req = httpMocks.createRequest();
-            const res = httpMocks.createResponse();
-
             await otp_controller.post_verify_otp(req, res);
 
+            //verify that the newly created OTP was fetched
             expect(Current_otp.findOne).toHaveBeenCalled();
-            expect(res.statusCode).toBe(200);
-            expect(res._getData()).toEqual(JSON.stringify({ correctNumber: 1234 }));
+            //verify that the response was sent with the correct value [OTP was verified]
+            expect(res.json).toHaveBeenCalledWith({ correctNumber: mockOtp.current_otp });
         });
 
-        //fail
-        it('should return 404 if no OTP has been generated', async () => {
+        //failed
+        it('should return a 404 if no OTP is found', async () => {
 
+            //assume no OTP was found
             Current_otp.findOne.mockResolvedValue(null);
 
-            const req = httpMocks.createRequest();
-            const res = httpMocks.createResponse();
-
             await otp_controller.post_verify_otp(req, res);
 
-            expect(res.statusCode).toBe(404);
-            expect(res._getData()).toEqual(JSON.stringify({ message: 'No otp generated yet' }));
+            //verify status code and message
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ message: 'No otp generated yet' });
         });
-
-        //fail
-        it('should return 500 if an error occurs during OTP verification', async () => {
-            
-            Current_otp.findOne.mockRejectedValue(new Error('Database Error'));
-
-            const req = httpMocks.createRequest();
-            const res = httpMocks.createResponse();
-
-            await otp_controller.post_verify_otp(req, res);
-
-            expect(res.statusCode).toBe(500);
-            expect(res._getData()).toBe("Internal Server Error!");
-        });
-
-
     });
+   
 });

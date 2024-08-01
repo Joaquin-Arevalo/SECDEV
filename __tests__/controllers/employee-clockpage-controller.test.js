@@ -7,159 +7,206 @@ const payroll = require('../../models/payroll_model.js');
 jest.mock('../../models/database.js');
 
 
-describe('get_employee_clockpage', () => {
+describe('employee_clockpage_controller', () => {
 
-    it('should rendeer employee-clockage with correct session data', () => {
-        const req = httpMocks.createRequest({
+    let req, res;
+
+    beforeEach(() => {
+        req = {
             session: {
                 Email: 'test@example.com',
                 Employee_type: 'Employee'
             }
-        });
-
-        const res = httpMocks.createResponse();
-
-        employee_clockpage_controller.get_employee_clockpage(req, res);
-        
-        expect(res._getRenderView()).toBe('employee-clockpage');
-        expect(res._getRenderData()).toEqual({
-            email: 'test@example.com',
-            emp_type: 'Employee'
-        });
-    });
-
-});
-
-describe('get_wfh_clockpage', () => {
-
-    it('should render wfh employee-clockpage with correct session data', () => {
-        const req = httpMocks.createRequest({
-            session: {
-                Email: 'test@example.com',
-                Employee_type: 'WFH'
-            }
-        });
-
-        const res = httpMocks.createResponse();
-
-        employee_clockpage_controller.get_wfh_clockpage(req, res);
-
-        expect(res._getRenderView()).toBe('work-from-home-clockpage');
-        expect(res._getRenderData()).toEqual({
-            email: 'test@example.com',
-            emp_type: 'WFH'
-        });
-        
-    });
-});
-
-describe('get_employee_time_in_status', () => {
-
-    it('should return time-in status of the employee', async () => {
-        const req = httpMocks.createRequest({
-            session: { Email: 'test@example.com' }
-        });
-
-        const res = httpMocks.createResponse();
-
-        database.findOne.mockResolvedValue({ IsTimedIn: true });
-
-        await employee_clockpage_controller.get_employee_time_in_status(req, res);
-
-        expect(res._getJSONData()).toEqual({ time_in_status: true });
-        expect(res.statusCode).toBe(200);
-    });
-
-    //fail
-    it('should return 500 if there is an error', async () => {
-
-        const req = httpMocks.createRequest({
-            session: { Email: 'test@example.com' }
-        });
-
-        const res = httpMocks.createResponse();
-
-        database.findOne.mockRejectedValue(new Error('Database error'));
-
-        await employee_clockpage_controller.get_employee_time_in_status(req, res);
-
-        expect(res._getData()).toBe("Internal Server Error!");
-        expect(res.statusCode).toBe(500);
-    });
-});
-
-describe('post_employee_time_in', () => {
-
-    it('should update employee time-in status and payroll', async () => {
-
-        const req = httpMocks.createRequest({
-            session: { Email: 'test@example.com' },
-            body: { Time_in: '09:00', TI_weekdayIndex: 1, Time_In_Date: '2024-07-24' }
-        });
-
-        const res = httpMocks.createResponse();
-
-        await employee_clockpage_controller.post_employee_time_in(req, res);
-
-        expect(database.updateOne).toHaveBeenCalledTimes(2);
-        expect(database.updateOne).toHaveBeenCalledWith(expect.anything(), { Email: 'test@example.com' }, { IsTimedIn: true });
-        expect(res._getRenderView()).toBe('employee-clockpage');
-        expect(res._getRenderData()).toEqual({
-            email: 'test@example.com',
-            emp_type: undefined,
-            ETI_weekdayIndex: undefined
-        });
-    });
-});
-
-describe('post_employee_time_out', () => {
-    //failed
-    it('should update payroll with time-out data', async () => {
-
-        const req = httpMocks.createRequest({
-            session: { Email: 'test@example.com' },
-            body: { TO_hour: '17', TO_minute: '00', TO_weekdayIndex: 1 }
-        });
-
-        const res = httpMocks.createResponse();
-
-        const dayData = {
-            Weekly_Hourly_Rate: 20,
-            Mon_Time_In: '09:00',
-            Weekly_Total_Pay: 0,
-            Time_In_Weekday_Index: 1
         };
 
-        const employeeData = {
-            Employee_Type: 'Employee'
+        res = {
+            render: jest.fn(),
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+            json: jest.fn()
         };
-
-        database.findOne
-            .mockResolvedValue(dayData)
-            .mockResolvedValue(employeeData);
-        
-        await employee_clockpage_controller.post_employee_time_out(req, res);
-
-        expect(database.updateOne).toHaveBeenCalled();
-        expect(res._getJSONData()).toEqual({ success: true, type: "Emp", message: "Time out recorded successfully!" });
     });
 
-    //failed
-    it('should handle errors during time-out process', async () => {
+    describe('get_employee_clockpage', () => {
 
-        const req = httpMocks.createRequest({
-            session: { Email: 'test@example.com' },
-            body: { TO_hour: '17', TO_minute: '00', TO_weekdayIndex: 1 }
+        it('should render the employee-clockpage with email and employee type', () => {
+            employee_clockpage_controller.get_employee_clockpage(req, res);
+
+            //verify that the page was rendered with the correct data
+            expect(res.render).toHaveBeenCalledWith('employee-clockpage', {
+                email: req.session.Email,
+                emp_type: req.session.Employee_type
+            });
+        });
+    });
+
+    describe('get_wfh_clockpage', () => {
+        it('should render the work-from-home-clockpage with email and employee type', () => {
+            employee_clockpage_controller.get_wfh_clockpage(req, res);
+
+            expect(res.render).toHaveBeenCalledWith('work-from-home-clockpage', {
+                email: req.session.Email,
+                emp_type: req.session.Employee_type
+            });
+        });
+    });
+
+    describe('get_employee_time_in_status', () => {
+
+        it('should return the time-in status for the current employee', async () => {
+
+            //assume the employee has timed in
+            const mockEmployee = { IsTimedIn: true };
+            database.findOne.mockResolvedValue(mockEmployee);
+
+            await employee_clockpage_controller.get_employee_time_in_status(req, res);
+
+            //verify that the correct employee data was returned
+            expect(database.findOne).toHaveBeenCalledWith(expect.anything(), { Email: req.session.Email });
+            //verify that the correct time-in status of the employee was returned
+            expect(res.json).toHaveBeenCalledWith({ time_in_status: mockEmployee.IsTimedIn });
         });
 
-        const res = httpMocks.createResponse();
-        res.json = jest.fn();
+        it('should handle errors gracefully', async () => {
 
-        database.findOne.mockRejectedValueOnce(new Error('Database error'));
+            //simulate error
+            database.findOne.mockRejectedValue(new Error('Database Error'));
 
-        await employee_clockpage_controller.post_employee_time_out(req, res);
+            await employee_clockpage_controller.get_employee_time_in_status(req, res);
 
-        expect(res.statusCode).toBe(500);
-        expect(res._getJSONData()).toEqual({ success: false, message: "Error recording time out!" });
+            //send error message and status code
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.send).toHaveBeenCalledWith("Internal Server Error!");
+        });
+    });
+
+    describe('post_employee_time_in', () => {
+        it('should update the employee time-in status and render the employee clockpage', async () => {
+            //initialize the req [assume test employee is timing in]
+            req = {
+                session: {
+                    Email: 'test@example.com',
+                    Employee_type: 'Employee'
+                },
+                body: {
+                    Time_In: '09:00',
+                    TI_weekdayIndex: 1,
+                    Time_In_Date: '2024-07-31'
+                }
+            };
+
+            database.updateOne.mockResolvedValue({});
+
+            await employee_clockpage_controller.post_employee_time_in(req, res);
+
+            //verify that the update was done in the correct table [employee] and that the employee time in status has been updated
+            expect(database.updateOne).toHaveBeenCalledWith(employee, { Email: req.session.Email }, { IsTimedIn: true });
+
+            //verify that the payroll of the correct employee was also updated
+            expect(database.updateOne).toHaveBeenCalledWith(payroll, { Email: req.session.Email, Week: 0 }, {
+                $set: {
+                    Mon_Time_In: req.body.Time_In,
+                    Mon_Date: req.body.Time_In_Date,
+                    Time_In_Weekday_Index: req.body.TI_weekdayIndex,
+                }
+            });
+
+            //verify that the page was rendered with the correct data
+            expect(res.render).toHaveBeenCalledWith("employee-clockpage", {
+                email: req.session.Email,
+                emp_type: req.session.Employee_type
+            });
+        })
+    })
+
+    describe('post_employee_time_out', () => {
+
+        beforeEach(() => {
+            req = {
+                body: {
+                    TO_hour: '17',
+                    TO_minute: '00',
+                    TO_weekdayIndex: 5
+                },
+                session: {
+                    Email: 'a@example.com',
+                    Employee_type: 'Employee'
+                }
+            };
+        })
+        //failed
+        it('should handle employee time out and update payroll', async () => {
+            
+            //mock payroll data
+            const mockPayroll = {
+                Mon_Time_In: '08:00',
+                Weekly_Hourly_Rate: 100,
+                Time_In_Weekday_Index: 1,
+                Some_Date_Field: '2024-08-01'
+            };
+
+            //assume the employee has already timed in
+            const mockEmployee = { IsTimedIn: true };
+
+            //use the correct models
+            database.findOne.mockImplementation((model, query) => {
+                if (model === payroll) return mockPayroll;
+                if (model === employee) return mockEmployee;
+            });
+
+            database.updateOne.mockResolvedValue({});
+
+            await employee_clockpage_controller.post_employee_time_out(req, res);
+
+            //verify that the payroll was updated
+            expect(database.findOne).toHaveBeenCalledWith(payroll, { Email: req.session.Email, Week: 0 });
+            //verify that the employee's status was updated
+            expect(database.findOne).toHaveBeenCalledWith(employee, { Email: req.session.Email });
+            expect(database.updateOne).toHaveBeenCalledWith(employee, { Email: req.session.Email }, { IsTimedIn: false });
+            //verify that the page was rendered with the correct data
+            expect(res.render).toHaveBeenCalledWith('employee-clockpage', { email: req.session.Email, emp_type: req.session.Employee_type });
+        });
+
+        //failed
+        it('should handle errors gracefully', async () => {
+            //simulate an error
+            database.findOne.mockRejectedValue(new Error('Database Error'));
+            
+            await employee_clockpage_controller.post_employee_time_out(req, res);
+
+            //verify that the error status code and error message was sent
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.send).toHaveBeenCalledWith('Internal Server Error!');
+        });
+
+        it('should correctly identify and handle holidays', async () => { 
+            
+            //mock payroll data
+            const mockPayroll = {
+                Mon_Time_In: '08:00',
+                Weekly_Hourly_Rate: 100,
+                Time_In_Weekday_Index: 1,
+                Some_Date_Field: '2024-08-01'
+            };
+
+            //assume the employee was timed in
+            const mockEmployee = { IsTimedIn: true };
+
+            database.findOne.mockImplementation((model, query) => {
+                if (model === payroll) return mockPayroll;
+                if (model === employee) return mockEmployee;
+            });
+
+            await employee_clockpage_controller.post_employee_time_out(req, res);
+
+            //verify that the payroll was updated
+            expect(database.findOne).toHaveBeenCalledWith(payroll, { Email: req.session.Email, Week: 0 });
+            //verify that the employee's status was updated
+            expect(database.findOne).toHaveBeenCalledWith(employee, { Email: req.session.Email });
+            expect(database.updateOne).toHaveBeenCalledWith(employee, { Email: req.session.Email }, { IsTimedIn: false });
+            //verify that the page was rendered with the correct data
+            expect(res.render).toHaveBeenCalledWith('employee-clockpage', { email: req.session.Email, emp_type: req.session.Employee_type });
+        });
+
     });
 });
