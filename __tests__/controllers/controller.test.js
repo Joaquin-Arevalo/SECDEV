@@ -1,24 +1,41 @@
 const controller = require('../../controllers/controller.js'); 
-const httpMocks = require('node-mocks-http');
 
-describe('controller tests', () => {
+describe('controller', () => {
 
-    it('should set status 204 for favicon', () => {
-        const req = httpMocks.createRequest();
-        const res = httpMocks.createResponse();
+    let req, res;
 
-        controller.getFavicon(req, res);
+    //initialize req and res
+    beforeEach(() => {
+        req = {};
+        res = {
+            status: jest.fn().mockReturnThis(),
+            render: jest.fn()
+        };
+    });
 
-        expect(res.statusCode).toBe(204);
+    describe('getFavicon', () => {
+
+        it('should respond with status 204', () => {
+
+            controller.getFavicon(req, res);
+
+            //return expected status code 
+            expect(res.status).toHaveBeenCalledWith(204);
+            //verify that the method was called once
+            expect(res.status).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('get_index', () => {
+
+        it('should render the log-in page view', () => {
+            controller.get_index(req, res);
+
+            //render the login page only once
+            expect(res.render).toHaveBeenCalledWith('login-page');
+            expect(res.render).toHaveBeenCalledTimes(1);
+        })
     })
 
-    it('should render login-page', () => {
-        const req = httpMocks.createRequest();
-        const res = httpMocks.createResponse();
-        const renderSpy = jest.spyOn(res, 'render');
-
-        controller.get_index(req, res);
-
-        expect(renderSpy).toHaveBeenCalledWith('login-page');
-    })
 })
+
