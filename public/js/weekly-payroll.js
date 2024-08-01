@@ -45,10 +45,10 @@ function dropdown(){
             const pph_c = document.getElementById("pph-id").value;
             validateInputPPH(pph_c);
         }else if(payroll_id && week_index !== 0){
-            alert("Error: Only current week is adjustable.");
+            togglePopup1()
             document.getElementById("weekly-payroll-form-id").reset();
         }else{
-            alert("Select a week and an employee first.");
+            togglePopup()
             document.getElementById("weekly-payroll-form-id").reset();
         }
     })
@@ -59,10 +59,10 @@ function dropdown(){
             const additional_c = document.getElementById("add-id").value;
             validateInput(additional_c);
         }else if(payroll_id && week_index !== 0){
-            alert("Error: Only current week is adjustable.");
+            togglePopup1()
             document.getElementById("weekly-payroll-form-id").reset();
         }else{
-            alert("Select a week and an employee first.");
+            togglePopup()
             document.getElementById("weekly-payroll-form-id").reset();
         }
     })
@@ -73,10 +73,10 @@ function dropdown(){
             const advance_c = document.getElementById("adv-id").value;
             validateInput(advance_c);
         }else if(payroll_id && week_index !== 0){
-            alert("Error: Only current week is adjustable.");
+            togglePopup1()
             document.getElementById("weekly-payroll-form-id").reset();
         }else{
-            alert("Select a week and an employee first.");
+            togglePopup()
             document.getElementById("weekly-payroll-form-id").reset();
         }
     })
@@ -87,10 +87,10 @@ function dropdown(){
             const deduction_c = document.getElementById("ded-id").value;
             validateInput(deduction_c);
         }else if(payroll_id && week_index !== 0){
-            alert("Error: Only current week is adjustable.");
+            togglePopup1()
             document.getElementById("weekly-payroll-form-id").reset();
         }else{
-            alert("Select a week and an employee first.");
+            togglePopup()
             document.getElementById("weekly-payroll-form-id").reset();
         }
     })
@@ -269,4 +269,11 @@ function dropdown(){
             console.error('Error fetching /admin_retrieve_emp_wpay:', error);
         });
     } 
+}
+
+function togglePopup(){
+    document.getElementById("popup-5").classList.toggle("active");
+}
+function togglePopup1(){
+    document.getElementById("popup-6").classList.toggle("active");
 }
