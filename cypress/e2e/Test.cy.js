@@ -1,50 +1,48 @@
 // cypress/integration/login_spec.js
 
-describe('Login testing', () => {
+
+describe('forgot password', () => {
 
   beforeEach(() => {
     cy.visit('http://localhost:3000');
 })
 
-  it('Successful login (employee)', () => {
-    // Enter valid username/email and password
-    cy.get('#email').type('john.doe@example.com');
-    cy.get('#password').type('password123');
+   // forgot password for no email found in database
+   it('Forgot password (email not found on database)', () => {
+  
+    // Click the forgot password button
+    cy.get('#login-form > :nth-child(2) > button').click();
+
+    // enter valid username/email
+    cy.get('#for-pas-email').type('notfoundemail');
+    
+    // Assert that the error message is displayed
+    cy.get('#error_issue').should('be.visible').and('contain', 'Username is Required!');
+  }); 
+   
+ //login witoout email and password 
+  it('login without username', () => {
+    // Enter invalid username/email and password
+    cy.get('#email').type('');
+    cy.get('#password').type('');
     
     // Click the login button
     cy.get('#login-button').click();
+    
+    // Assert that the error message is displayed
+    cy.get('#error_issue').should('be.visible').and('contain', 'Username is Required!');
+  });
 
-    // Assert that the login button is not visible
-    cy.get('#login-button').should('not.exist');
-    cy.get('#time').should('be.visible');
-  })
-
-  it('Successful login (Admin)', () => {
-    // Enter valid username/email and password
-    cy.get('#email').type('jane.smith@example.com');
-    cy.get('#password').type('password123');
+  //login witoout password 
+  it('login without password', () => {
+    // Enter invalid username/email and password
+    cy.get('#email').type('invalid_user');
+    cy.get('#password').type('');
     
     // Click the login button
     cy.get('#login-button').click();
-
-    // Assert that the login button is not visible
-    cy.get('#login-button').should('not.exist');
-    cy.get('#time').should('be.visible');
-  })
-
-  it('Successful logout', () => {
-    // Enter valid username/email and password
-    cy.get('#email').type('john.doe@example.com');
-    cy.get('#password').type('password123');
     
-    // Click the login button
-    cy.get('#login-button').click();
-
-    // Click the logout button
-    cy.get('h2 > a').click();      
-
-    // Assert that the login button is not visible
-    cy.get('h2 > a').should('not.exist');
-    cy.get('#login-button').should('be.visible');
-  })
-});
+    // Assert that the error message is displayed
+    cy.get('#error_issue').should('be.visible').and('contain', 'Password is Required!');
+  });
+}); 
