@@ -32,79 +32,164 @@ const employee_clockpage_controller = {
         }
     },
 
-    post_employee_time_in: async function (req, res){
-        const {Time_In, TI_weekdayIndex, Time_In_Date} = req.body;
-        const employee_email = req.session.Email;
+    post_employee_time_in: async function (req, res) {
+            const { Time_In, TI_weekdayIndex, Time_In_Date } = req.body;
+            const employee_email = req.session.Email;
 
-        // let regular_holiday = ["01-01", "03-28", "03-29", "04-09", "05-01", "06-12", "08-26", "11-30", "12-25", "12-30",];
-        // function is_regular_holiday(date){
-        //     let month_day = date.slice(5, 10);
-        //     return regular_holiday.includes(month_day);
-        // }
-        //make a checker for previous days if monday then dont
-        //or do i just check the previous seven days?
-        //on time in initializes the dates of the days before and after the current dday for the week
+            let regular_holiday = ["01-01", "03-28", "03-29", "04-09", "05-01", "06-12", "08-26", "11-30", "12-25", "12-30"];
+            function is_regular_holiday(date) {
+                let month_day = date.slice(5, 10);
+                return regular_holiday.includes(month_day);
+            }
 
-        await database.updateOne(employee, {Email: req.session.Email}, {IsTimedIn: true})
-        if(TI_weekdayIndex === 1){
-            await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
-                $set: {
-                    Mon_Time_In: Time_In, 
-                    Mon_Date: Time_In_Date,
-                    Time_In_Weekday_Index: TI_weekdayIndex,
+            const day = await database.findOne(payroll, { Email: employee_email, Week: 0 });
+
+            function getPreviousDates(currentDate) {
+                let date = new Date(currentDate);
+                let previousDate = new Date(date);
+                previousDate.setDate(date.getDate() - 1);
+                var day = previousDate.toISOString().slice(0, 10)
+            
+                return day;
+            }
+
+            const dates = getPreviousDates(Time_In_Date);
+            console.log("variable dates = ", dates);
+            const prevDay_weekdayIndex = TI_weekdayIndex - 1;
+
+            if (dates !== day.Mon_Date || dates !== day.Tue_Date || dates !== day.Wed_Date || dates !== day.Thu_Date || dates !== day.Fri_Date || dates !== day.Sat_Date || dates !== day.Sun_Date) {
+                console.log("inside the if dates !=");
+                if (is_regular_holiday(dates)) {
+                    const day_pay = 8 * day.Weekly_Hourly_Rate;
+                    const weekly_pay = day_pay + day.Weekly_Total_Pay;
+                    if (prevDay_weekdayIndex === 1) {
+                        await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                            $set: {
+                                Mon_Date: dates,
+                                Time_In_Weekday_Index: prevDay_weekdayIndex,
+                                Mon_Total_Pay: day_pay,
+                                Weekly_Total_Pay: weekly_pay
+                            }
+                        });
+                    } else if (prevDay_weekdayIndex === 2) {
+                        await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                            $set: {
+                                Tue_Date: dates,
+                                Time_In_Weekday_Index: prevDay_weekdayIndex,
+                                Tue_Total_Pay: day_pay,
+                                Weekly_Total_Pay: weekly_pay
+                            }
+                        });
+                    } else if (prevDay_weekdayIndex === 3) {
+                        await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                            $set: {
+                                Wed_Date: dates,
+                                Time_In_Weekday_Index: prevDay_weekdayIndex,
+                                Wed_Total_Pay: day_pay,
+                                Weekly_Total_Pay: weekly_pay
+                            }
+                        });
+                    } else if (prevDay_weekdayIndex === 4) {
+                        await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                            $set: {
+                                Thu_Date: dates,
+                                Time_In_Weekday_Index: prevDay_weekdayIndex,
+                                Thu_Total_Pay: day_pay,
+                                Weekly_Total_Pay: weekly_pay
+                            }
+                        });
+                    } else if (prevDay_weekdayIndex === 5) {
+                        await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                            $set: {
+                                Fri_Date: dates,
+                                Time_In_Weekday_Index: prevDay_weekdayIndex,
+                                Fri_Total_Pay: day_pay,
+                                Weekly_Total_Pay: weekly_pay
+                            }
+                        });
+                    } else if (prevDay_weekdayIndex === 6) {
+                        await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                            $set: {
+                                Sat_Date: dates,
+                                Time_In_Weekday_Index: prevDay_weekdayIndex,
+                                Sat_Total_Pay: day_pay,
+                                Weekly_Total_Pay: weekly_pay
+                            }
+                        });
+                    } else if (prevDay_weekdayIndex === 0) {
+                        await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                            $set: {
+                                Sun_Date: dates,
+                                Time_In_Weekday_Index: prevDay_weekdayIndex,
+                                Sun_Total_Pay: day_pay,
+                                Weekly_Total_Pay: weekly_pay
+                            }
+                        });
+                    }
                 }
-            });
-        }else if(TI_weekdayIndex === 2){
-            await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
-                $set: {
-                    Tue_Time_In: Time_In,
-                    Tue_Date: Time_In_Date,
-                    Time_In_Weekday_Index: TI_weekdayIndex,
-                }
-            });
-        }else if(TI_weekdayIndex === 3){
-            await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
-                $set: {
-                    Wed_Time_In: Time_In,
-                    Wed_Date: Time_In_Date,
-                    Time_In_Weekday_Index: TI_weekdayIndex,
-                }
-            });
-        }else if(TI_weekdayIndex === 4){
-            await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
-                $set: {
-                    Thu_Time_In: Time_In,
-                    Thu_Date: Time_In_Date,
-                    Time_In_Weekday_Index: TI_weekdayIndex,
-                }
-            });
-        }else if(TI_weekdayIndex === 5){
-            await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
-                $set: {
-                    Fri_Time_In: Time_In,
-                    Fri_Date: Time_In_Date,
-                    Time_In_Weekday_Index: TI_weekdayIndex,
-                }
-            });
-        }else if(TI_weekdayIndex === 6){
-            await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
-                $set: {
-                    Sat_Time_In: Time_In,
-                    Sat_Date: Time_In_Date,
-                    Time_In_Weekday_Index: TI_weekdayIndex,
-                }
-            });
-        }else if(TI_weekdayIndex === 0){
-            await database.updateOne(payroll, {Email: employee_email, Week: 0}, {
-                $set: {
-                    Sun_Time_In: Time_In,
-                    Sun_Date: Time_In_Date,
-                    Time_In_Weekday_Index: TI_weekdayIndex,
-                }
-            });
-        }
-        res.render("employee-clockpage", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex});
-        res.render("employee-clockpage", {email: req.session.Email, emp_type: req.session.Employee_type});
+                
+            }
+
+            await database.updateOne(employee, { Email: req.session.Email }, { IsTimedIn: true })
+            if (TI_weekdayIndex === 1) {
+                await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                    $set: {
+                        Mon_Time_In: Time_In,
+                        Mon_Date: Time_In_Date,
+                        Time_In_Weekday_Index: TI_weekdayIndex,
+                    }
+                });
+            } else if (TI_weekdayIndex === 2) {
+                await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                    $set: {
+                        Tue_Time_In: Time_In,
+                        Tue_Date: Time_In_Date,
+                        Time_In_Weekday_Index: TI_weekdayIndex,
+                    }
+                });
+            } else if (TI_weekdayIndex === 3) {
+                await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                    $set: {
+                        Wed_Time_In: Time_In,
+                        Wed_Date: Time_In_Date,
+                        Time_In_Weekday_Index: TI_weekdayIndex,
+                    }
+                });
+            } else if (TI_weekdayIndex === 4) {
+                await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                    $set: {
+                        Thu_Time_In: Time_In,
+                        Thu_Date: Time_In_Date,
+                        Time_In_Weekday_Index: TI_weekdayIndex,
+                    }
+                });
+            } else if (TI_weekdayIndex === 5) {
+                await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                    $set: {
+                        Fri_Time_In: Time_In,
+                        Fri_Date: Time_In_Date,
+                        Time_In_Weekday_Index: TI_weekdayIndex,
+                    }
+                });
+            } else if (TI_weekdayIndex === 6) {
+                await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                    $set: {
+                        Sat_Time_In: Time_In,
+                        Sat_Date: Time_In_Date,
+                        Time_In_Weekday_Index: TI_weekdayIndex,
+                    }
+                });
+            } else if (TI_weekdayIndex === 0) {
+                await database.updateOne(payroll, { Email: employee_email, Week: 0 }, {
+                    $set: {
+                        Sun_Time_In: Time_In,
+                        Sun_Date: Time_In_Date,
+                        Time_In_Weekday_Index: TI_weekdayIndex,
+                    }
+                });
+            }
+            res.render("employee-clockpage", { email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex });
+            res.render("employee-clockpage", { email: req.session.Email, emp_type: req.session.Employee_type });
     },
 
     post_employee_time_out: async function (req, res){

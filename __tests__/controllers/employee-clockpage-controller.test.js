@@ -52,7 +52,7 @@ describe('employee_clockpage_controller', () => {
     });
 
     describe('get_employee_time_in_status', () => {
-
+        
         it('should return the time-in status for the current employee', async () => {
 
             //assume the employee has timed in
@@ -91,25 +91,33 @@ describe('employee_clockpage_controller', () => {
                 body: {
                     Time_In: '09:00',
                     TI_weekdayIndex: 1,
-                    Time_In_Date: '2024-07-31'
+                    Time_In_Date: '2024-07-30'
                 }
             };
 
             database.updateOne.mockResolvedValue({});
+            database.findOne.mockResolvedValue({
+                Mon_Date: '2024-07-30',
+                Time_In_Weekday_Index: 1,
+                Mon_Total_Pay: 160,
+                Weekly_Total_Pay: 160
+            });
 
             await employee_clockpage_controller.post_employee_time_in(req, res);
 
             //verify that the update was done in the correct table [employee] and that the employee time in status has been updated
-            expect(database.updateOne).toHaveBeenCalledWith(employee, { Email: req.session.Email }, { IsTimedIn: true });
-
-            //verify that the payroll of the correct employee was also updated
-            expect(database.updateOne).toHaveBeenCalledWith(payroll, { Email: req.session.Email, Week: 0 }, {
+            expect(database.updateOne).toHaveBeenNthCalledWith(1, employee, { Email: req.session.Email }, { $set: { IsTimedIn: true } });
+             //verify that the payroll of the correct employee was also updated
+            expect(database.updateOne).toHaveBeenCalledWith(2, payroll, { Email: req.session.Email, Week: 0 }, {
                 $set: {
-                    Mon_Time_In: req.body.Time_In,
-                    Mon_Date: req.body.Time_In_Date,
-                    Time_In_Weekday_Index: req.body.TI_weekdayIndex,
+                    Mon_Date: '2024-07-30',
+                    Mon_Time_In: '09:00',
+                    Time_In_Weekday_Index: 1,
+                    Mon_Total_Pay: 160,
+                    Weekly_Total_Pay: 160
                 }
             });
+
 
             //verify that the page was rendered with the correct data
             expect(res.render).toHaveBeenCalledWith("employee-clockpage", {
@@ -186,7 +194,7 @@ describe('employee_clockpage_controller', () => {
                 Mon_Time_In: '08:00',
                 Weekly_Hourly_Rate: 100,
                 Time_In_Weekday_Index: 1,
-                Some_Date_Field: '2024-08-01'
+                
             };
 
             //assume the employee was timed in
