@@ -19,6 +19,14 @@ describe('forgot password', () => {
     // Assert that the error message is displayed
     cy.get('#error_issue').should('be.visible').and('contain', 'Username is Required!');
   }); 
+}); 
+
+
+describe('error messages in login', () => {
+
+  beforeEach(() => {
+    cy.visit('http://localhost:3000');
+})
    
  //login witoout email and password 
   it('login without username', () => {
@@ -46,3 +54,4 @@ describe('forgot password', () => {
     cy.get('#error_issue').should('be.visible').and('contain', 'Password is Required!');
   });
 }); 
+
