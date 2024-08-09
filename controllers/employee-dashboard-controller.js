@@ -15,7 +15,7 @@ const employee_dashboard_controller = {
             const emp_rec = await database.findOne(employee, {Email: employee_email});
             res.render("employee-dashboard", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex, emp_rec});
         }catch (err){
-            console.error("Error processing employee details: ", error);
+            console.error("Error processing employee details: ", err);
             res.status(500).send("Internal Server Error!");
         }
     },
