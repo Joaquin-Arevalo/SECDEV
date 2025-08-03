@@ -52,6 +52,8 @@ const manager_task_controller = {
                 Task_isDeleted: false
             });
 
+            const statusList = r_tasks.map(t => t.Task_isCompleted === true ? "Complete" : "Incomplete");
+
             // Also fetch all employees (again)
             const emp_total = await employee.find({
                 $or: [
@@ -65,7 +67,7 @@ const manager_task_controller = {
             });
 
             // Render with all data
-            res.render("manager-empman-task", {r_tasks, emp_total});
+            res.render("manager-empman-task", {r_tasks, emp_total, statusList});
 
         } catch (error) {
             console.error("Error fetching specific employee tasks:", error);
@@ -103,6 +105,72 @@ const manager_task_controller = {
         } catch (error) {
             console.error(error);
             res.status(500).json({ success: false, message: "Registration Controller Error!" });
+        }
+    },
+
+
+    delete_task: async function(req, res) {
+        const taskId = req.body.taskId;
+        try {
+            const updated = await task.findByIdAndUpdate(taskId, {
+                Task_isDeleted: true
+            });
+
+            if (!updated) {
+                return res.status(404).json({ success: false, message: "Task not found" });
+            }
+
+            res.json({ success: true, message: "Task marked as deleted." });
+        } catch (error) {
+            console.error("Error deleting task:", error);
+            res.status(500).json({ success: false, message: "Server error." });
+        }
+    },
+
+    complete_task: async function(req, res) {
+        const taskId = req.body.taskId;
+        try {
+            const updated = await task.findByIdAndUpdate(taskId, {
+                Task_isCompleted: true
+            });
+
+            if (!updated) {
+                return res.status(404).json({ success: false, message: "Task not found" });
+            }
+
+            res.json({ success: true, message: "Task marked as complete." });
+        } catch (error) {
+            console.error("Error completing task:", error);
+            res.status(500).json({ success: false, message: "Server error." });
+        }
+    },
+
+    edit_task: async function(req, res) {
+        const { taskID, taskName, taskDescription, email } = req.body;
+
+        try {
+            const emp = await employee.findOne({ Email: email });
+            if (!emp) {
+                return res.status(404).json({ success: false, message: "Employee not found." });
+            }
+
+            const updatedTask = await task.findByIdAndUpdate(taskID, {
+                Task_Name: taskName,
+                Task_Description: taskDescription,
+                Email: emp.Email,
+                First_Name: emp.First_Name,
+                Last_Name: emp.Last_Name,
+                Employee_Type: emp.Employee_Type
+            });
+
+            if (!updatedTask) {
+                return res.status(404).json({ success: false, message: "Task not found" });
+            }
+
+            res.json({ success: true, message: "Task updated successfully." });
+        } catch (error) {
+            console.error("Error editing task:", error);
+            res.status(500).json({ success: false, message: "Server error." });
         }
     }
 

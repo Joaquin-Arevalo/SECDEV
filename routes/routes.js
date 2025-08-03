@@ -169,9 +169,9 @@ app.get('/man_emp_task', initial_process, manager_access, manager_task_controlle
 app.get('/man_employee_total', initial_process, manager_access, manager_task_controllers.get_emp_total);
 app.get('/man_specific_employee_task', initial_process, manager_access, manager_task_controllers.get_specific_emp_task);
 app.post('/man_assign_task', initial_process, manager_access, manager_task_controllers.post_register_task);
-
-
-
+app.post('/man_delete_task', initial_process, manager_access, manager_task_controllers.delete_task);
+app.post('/man_complete_task', initial_process, manager_access, manager_task_controllers.complete_task);
+app.post('/man_edit_task', initial_process, manager_access, manager_task_controllers.edit_task);
 
 
 
