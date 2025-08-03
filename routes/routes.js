@@ -19,8 +19,18 @@ const forgotPwd = require('../controllers/forgot-password-controller');
 const adminNotifs = require('../controllers/admin-notifs-controller');
 const registerCtl = require('../controllers/register-controller');
 
+// secdev ++
+const emp_register_controllers = require('../controllers/emp-register-controller');
+const manager_dash_logs_controllers = require('../controllers/manager-dash-logs-controller');
+const manager_empman_emprecs_controllers = require('../controllers/manager-empman-emprecs-controller');
+const manager_empman_payroll_controllers = require('../controllers/manager-empman-payroll-controller');
+const manager_task_controllers = require('../controllers/manager-task-controller');
+
 const empSP = require('../controllers/employee-salary-particulars-controller');
 const adminSP = require('../controllers/admin-salary-particulars-controller');
+
+//SECDEV ++
+const manager_salary_particulars_controllers = require('../controllers/manager-salary-particulars-controller.js');
  
 const express = require('express');
 const router = express.Router();

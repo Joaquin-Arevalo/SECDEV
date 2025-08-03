@@ -1018,3 +1018,85 @@ body{
         display: none;
     }
 }
+
+/* secdev */
+.popup-task {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-task.active {
+    display: flex;
+}
+
+.popup-task .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.popup-task .content {
+    position: relative;
+    background: white;
+    padding: 30px 20px;
+    border-radius: 12px;
+    z-index: 1001;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.popup-task .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Common styling for all action buttons */
+.delete-task-btn,
+.edit-task-btn,
+.complete-task-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin: 0 4px;
+  padding: 6px;
+  transition: color 0.2s ease;
+}
+
+/* Specific colors for each button */
+.delete-task-btn {
+  color: #d9534f; /* red */
+}
+.delete-task-btn:hover {
+  color: #c9302c;
+}
+
+.edit-task-btn {
+  color: #f0ad4e; /* orange */
+}
+.edit-task-btn:hover {
+  color: #ec971f;
+}
+
+.complete-task-btn {
+  color: #5cb85c; /* green */
+}
+.complete-task-btn:hover {
+  color: #449d44;
+}

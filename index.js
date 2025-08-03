@@ -94,7 +94,13 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong.');
 });
 
-// addData.populateEmployees();
+/*----- Generic Error Handler -----*/
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send('Something went wrong.');
+});
+
+// addData.populateEmployees(); //manual code based population of employees
 // addDataPayroll.populate_payroll();
 
 /*----- start -----*/

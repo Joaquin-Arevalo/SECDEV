@@ -31,14 +31,14 @@
     </div>
     
     <div class="left-payroll admin-leftdash" style="background-color: var(--white-m); padding:0;">
-        <div class="title-container" style="background-color: var(--background); margin:0;">
+        {{!-- <div class="title-container" style="background-color: var(--background); margin:0;">
         <div class="page-title title-wrapper" style="transform: translate(10px, 3px)" onclick="addEmp()">
             <h2>Add Employee</h2>
         </div>
         <div class="page-title title-wrapper" onclick="deleteEmp()">
             <h2>Delete Employee</h2>
         </div>
-        </div>
+        </div> --}}
         <div class="container">
             <div class="emp-info" style="font-weight:bold;">
                     <!-- Placeholder info -->
@@ -49,9 +49,8 @@
                     <p><span class="label">Email:</span> <span><input type="email" name="email" placeholder="Email" id="email"></span></p> 
                     <p><span class="label">Password:</span> <span><input type="password" name="password" placeholder="Password" id="password"></p>
                     <p><span class="label">Role:</span> <span>
-                        <select name="employeeType" id="employee-type" class="role-dropdown">                        
-                            <option>Manager</option>
-                            <option>Admin</option>
+                        <select name="employeeType" id="employee-type" class="role-dropdown">                        <option>Employee</option>
+                            <option>Work From Home</option>
                         </select></span></p> 
 
                 <div class="ad-left-btn">
@@ -64,7 +63,7 @@
         </div>
     </div>
 
-{{>adminsidenav}}
+{{!-- {{>adminsidenav}}
 <script>
 
     function addEmp() {
@@ -74,7 +73,7 @@
     function deleteEmp() {
         window.location.href = 'delete_user';
     }
-</script>
-<script src="/js/register.js"></script>
+</script> --}}
+<script src="/js/emp-register.js"></script>
 </body>
 </html>
