@@ -5,138 +5,159 @@ Functions:
 */
 
 const controllers = require('../controllers/controller');
-const login_controllers = require('../controllers/login-controller');
-const employee_dashboard_controllers = require('../controllers/employee-dashboard-controller');
-const employee_clockpage_controllers = require('../controllers/employee-clockpage-controller');
-const logout_controllers = require('../controllers/logout-controller');
-const otp_controller = require('../controllers/otp-controller');
-const admin_dash_logs_controllers = require('../controllers/admin-dash-logs-controller');
-const delete_user_controller = require('../controllers/delete-user-controller');
-const admin_empman_emprecs_controllers = require('../controllers/admin-empman-emprecs-controller');
-const admin_empman_payroll_controllers = require('../controllers/admin-empman-payroll-controller');
-const update_payroll_controllers = require('../controllers/update-payroll-controller');
-const forgot_password_controllers = require('../controllers/forgot-password-controller');
-const admin_notifs_controllers = require('../controllers/admin-notifs-controller');
+const login = require('../controllers/login-controller');
+const empDash = require('../controllers/employee-dashboard-controller');
+const empClock = require('../controllers/employee-clockpage-controller');
+const logout = require('../controllers/logout-controller');
+const otp = require('../controllers/otp-controller');
+const adminLogs = require('../controllers/admin-dash-logs-controller');
+const delUser = require('../controllers/delete-user-controller');
+const adminEmpRecs = require('../controllers/admin-empman-emprecs-controller');
+const adminPayroll = require('../controllers/admin-empman-payroll-controller');
+const updatePayroll = require('../controllers/update-payroll-controller');
+const forgotPwd = require('../controllers/forgot-password-controller');
+const adminNotifs = require('../controllers/admin-notifs-controller');
+const registerCtl = require('../controllers/register-controller');
 
-const register_controllers = require('../controllers/register-controller');
-
-//for salary particulars page
-const employee_salary_particulars_controllers = require('../controllers/employee-salary-particulars-controller.js');
-const admin_salary_particulars_controllers = require('../controllers/admin-salary-particulars-controller.js');
+const empSP = require('../controllers/employee-salary-particulars-controller');
+const adminSP = require('../controllers/admin-salary-particulars-controller');
  
 const express = require('express');
-const app = express();
-app.use(express.json());
+const router = express.Router();
+router.use(express.json());
 
-function initial_process(req, res, next){
-    if(!req.session.Email){
-        res.redirect('/');
-    }else{
-        next();
-    }
-}
+/* ---------- Auth/Role middleware ---------- */
 
-function must_be_logged_out(req, res, next){
-    if(req.session.Email){
-        if(req.session.Employee_Type === "Admin"){
-            res.redirect('/admin_dashboard');
-        }else if(req.session.Employee_Type === "Employee"){
-            res.redirect('/employee_clockpage');
-        }else{
-            res.redirect('/work_from_home_clockpage');
-        }
-    }else{
-        next();
-    }
-}
+const redirectByRole = (req, res) => {
+  const t = req.session?.Employee_Type;
+  if (t === 'Admin') return res.redirect('/admin_dashboard');
+  if (t === 'Employee') return res.redirect('/employee_clockpage');
+  if (t === 'Work From Home') return res.redirect('/work_from_home_clockpage');
+  return res.redirect('/');
+};
 
-function employee_access(req, res, next){
-    if(req.session.Employee_Type === "Work From Home"){
-        res.redirect('/work_from_home_clockpage');
-    }else{
-        next();
-    }
-}
+const isAuthenticated = (req, res, next) =>
+  req.session?.Email ? next() : res.redirect('/');
 
-function wfh_access(req, res, next){
-    if(req.session.Employee_Type === "Employee"){
-        res.redirect('/employee_clockpage');
-    }else{
-        next();
-    }
-}
+const isLoggedOut = (req, res, next) =>
+  !req.session?.Email ? next() : redirectByRole(req, res);
 
-function employee_wfh_access(req, res, next){
-    if(req.session.Employee_Type === "Admin"){
-        res.redirect('/admin_dashboard');
-    }else{
-        next();
-    }
-}
+const allowRoles = (...roles) => (req, res, next) =>
+  roles.includes(req.session?.Employee_Type) ? next() : redirectByRole(req, res);
 
-function admin_access(req, res, next){
-    if(req.session.Employee_Type === "Employee"){
-        res.redirect('/employee_clockpage');
-    }else if(req.session.Employee_Type === "Work From Home"){
-        res.redirect('/work_from_home_clockpage');
-    }else{
-        next();
-    }
-}
+/* ---------- Public routes (no auth) ---------- */
+router.get('/', isLoggedOut, controllers.get_index);
+router.post('/login_account', isLoggedOut, login.post_login);
+router.post('/add_forgot_password', isLoggedOut, forgotPwd.post_add_forgot_password);
 
-//initial routes access
-app.get('/', must_be_logged_out, controllers.get_index);
-app.post('/add_forgot_password', must_be_logged_out, forgot_password_controllers.post_add_forgot_password);
-app.post('/login_account', must_be_logged_out, login_controllers.post_login);
-app.get('/logout', initial_process, logout_controllers.get_logout);
+/* ---------- Session management ---------- */
+router.get('/logout', isAuthenticated, logout.get_logout);
 
-//wfh routes access
-app.get('/work_from_home_clockpage', initial_process, employee_wfh_access, wfh_access, employee_clockpage_controllers.get_wfh_clockpage);
+/* ---------- WFH-only ---------- */
+router.get('/work_from_home_clockpage',
+  isAuthenticated,
+  allowRoles('Work From Home'),
+  empClock.get_wfh_clockpage
+);
 
-//employee routes access
-app.get('/employee_clockpage', initial_process, employee_wfh_access, employee_access, employee_clockpage_controllers.get_employee_clockpage);
-app.post('/generate_otp', initial_process, employee_wfh_access, employee_access, otp_controller.post_generate_otp);
-app.post('/verify_otp', initial_process, employee_wfh_access, employee_access, otp_controller.post_verify_otp); 
+/* ---------- Employee-only ---------- */
+router.get('/employee_clockpage',
+  isAuthenticated,
+  allowRoles('Employee'),
+  empClock.get_employee_clockpage
+);
+router.post('/generate_otp',
+  isAuthenticated,
+  allowRoles('Employee'),
+  otp.post_generate_otp
+);
+router.post('/verify_otp',
+  isAuthenticated,
+  allowRoles('Employee'),
+  otp.post_verify_otp
+);
 
-//employee and wfh routes access
-app.get('/time_in_status', initial_process, employee_wfh_access, employee_clockpage_controllers.get_employee_time_in_status);
-app.get('/employee_dashboard', initial_process, employee_wfh_access, employee_dashboard_controllers.get_employee_dashboard);
-app.post('/employee_time_in', initial_process, employee_wfh_access, employee_clockpage_controllers.post_employee_time_in);
-app.post('/employee_time_out', initial_process, employee_wfh_access, employee_clockpage_controllers.post_employee_time_out);
-app.post('/retrieve_employee_payroll',initial_process,  employee_wfh_access, employee_dashboard_controllers.get_employee_details);
-// app.get('/salary_particulars', initial_process, employee_wfh_access, employee_salary_particulars_controllers.get_salary_particulars)
+/* ---------- Employee & WFH (common employee functions) ---------- */
+router.get('/time_in_status',
+  isAuthenticated,
+  allowRoles('Employee', 'Work From Home'),
+  empClock.get_employee_time_in_status
+);
+router.get('/employee_dashboard',
+  isAuthenticated,
+  allowRoles('Employee', 'Work From Home'),
+  empDash.get_employee_dashboard
+);
+router.post('/employee_time_in',
+  isAuthenticated,
+  allowRoles('Employee', 'Work From Home'),
+  empClock.post_employee_time_in
+);
+router.post('/employee_time_out',
+  isAuthenticated,
+  allowRoles('Employee', 'Work From Home'),
+  empClock.post_employee_time_out
+);
+router.post('/retrieve_employee_payroll',
+  isAuthenticated,
+  allowRoles('Employee', 'Work From Home'),
+  empDash.get_employee_details
+);
 
-//admin routes access
-app.get('/admin_dashboard', initial_process, admin_access, admin_dash_logs_controllers.get_admin_dash_logs);
-app.get('/register', initial_process, admin_access, register_controllers.get_register);
-app.post('/register_employee', initial_process, admin_access, register_controllers.post_register);
-app.get('/retrieve_employee_summary', initial_process, admin_access, admin_dash_logs_controllers.get_employee_summary);
-app.get('/delete_user', initial_process, admin_access, delete_user_controller.get_delete_user_page);
-app.get('/delete_user_employee', initial_process, admin_access, delete_user_controller.get_delete_user);
-app.post('/delete_chosen_user', initial_process, admin_access, delete_user_controller.post_delete_user);
-app.post('/display_delete_info', initial_process, admin_access, delete_user_controller.post_display_info);
-app.get('/admin_empman_payroll', initial_process, admin_access, admin_empman_payroll_controllers.get_admin_empman_payroll);
-app.get('/admin_empman_emprecs', initial_process, admin_access, admin_empman_emprecs_controllers.get_emprecs);
-app.post('/display_specific_employee_records', initial_process, admin_access, admin_empman_emprecs_controllers.post_specific_emprecs);
-app.get('/admin_retrieve_employee_total_wp', initial_process, admin_access, admin_empman_payroll_controllers.get_emp_total);
-app.get('/admin_retrieve_emp_wpay', initial_process, admin_access, admin_empman_payroll_controllers.get_emp_wpay);
-app.post('/admin_update_payroll', initial_process, admin_access, admin_empman_payroll_controllers.post_update_payroll);
-app.get('/admin_notifs', initial_process, admin_access, admin_notifs_controllers.get_admin_notifs);
-app.get('/display_forgot_password', initial_process, admin_access, admin_notifs_controllers.get_forgot_password);
-app.post('/delete_forgot_password', initial_process, admin_access, forgot_password_controllers.post_delete_forgot_password);
+/* ---------- Salary Particulars ---------- */
+router.get('/salary_particulars',
+  isAuthenticated,
+  allowRoles('Employee', 'Work From Home'),
+  empSP.get_salary_particulars
+);
+router.post('/print_salary_particulars',
+  isAuthenticated,
+  allowRoles('Employee', 'Work From Home'),
+  empSP.post_print_salary_particulars
+);
 
-app.post('/update_employee_payroll', update_payroll_controllers.post_update_employee_payroll);
+router.get('/admin_salary_particulars',
+  isAuthenticated,
+  allowRoles('Admin'),
+  adminSP.get_salary_particulars
+);
+router.get('/admin_retrieve_employee_total_sp',
+  isAuthenticated,
+  allowRoles('Admin'),
+  adminSP.get_emp_total
+);
+router.get('/admin_salary_particulars_employee',
+  isAuthenticated,
+  allowRoles('Admin'),
+  adminSP.get_salary_particulars_employee
+);
+router.post('/admin_print_salary_particulars',
+  isAuthenticated,
+  allowRoles('Admin'),
+  adminSP.post_print_salary_particulars
+);
 
-//for emp salary particulars (include the process reqs)
-// app.get('/employeee_salary_particulars', employee_salary_particulars_controllers.get_salary_particulars);
-app.get('/salary_particulars', employee_salary_particulars_controllers.get_salary_particulars);
-app.post('/print_salary_particulars', employee_salary_particulars_controllers.post_print_salary_particulars);
+/* ---------- Admin-only ---------- */
+router.get('/admin_dashboard', isAuthenticated, allowRoles('Admin'), adminLogs.get_admin_dash_logs);
+router.get('/register',        isAuthenticated, allowRoles('Admin'), registerCtl.get_register);
+router.post('/register_employee', isAuthenticated, allowRoles('Admin'), registerCtl.post_register);
 
-app.get('/admin_salary_particulars', admin_salary_particulars_controllers.get_salary_particulars);
-app.get('/admin_retrieve_employee_total_sp', admin_salary_particulars_controllers.get_emp_total);
-app.get('/admin_salary_particulars_employee', admin_salary_particulars_controllers.get_salary_particulars_employee);
-app.post('/admin_print_salary_particulars', admin_salary_particulars_controllers.post_print_salary_particulars);
+router.get('/retrieve_employee_summary',  isAuthenticated, allowRoles('Admin'), adminLogs.get_employee_summary);
 
-module.exports = app;
+router.get('/delete_user',                isAuthenticated, allowRoles('Admin'), delUser.get_delete_user_page);
+router.get('/delete_user_employee',       isAuthenticated, allowRoles('Admin'), delUser.get_delete_user);
+router.post('/delete_chosen_user',        isAuthenticated, allowRoles('Admin'), delUser.post_delete_user);
+router.post('/display_delete_info',       isAuthenticated, allowRoles('Admin'), delUser.post_display_info);
 
-//get_salary_particulars_details
+router.get('/admin_empman_payroll',       isAuthenticated, allowRoles('Admin'), adminPayroll.get_admin_empman_payroll);
+router.get('/admin_empman_emprecs',       isAuthenticated, allowRoles('Admin'), adminEmpRecs.get_emprecs);
+router.post('/display_specific_employee_records', isAuthenticated, allowRoles('Admin'), adminEmpRecs.post_specific_emprecs);
+router.get('/admin_retrieve_employee_total_wp',   isAuthenticated, allowRoles('Admin'), adminPayroll.get_emp_total);
+router.get('/admin_retrieve_emp_wpay',            isAuthenticated, allowRoles('Admin'), adminPayroll.get_emp_wpay);
+router.post('/admin_update_payroll',               isAuthenticated, allowRoles('Admin'), adminPayroll.post_update_payroll);
+
+router.get('/admin_notifs',               isAuthenticated, allowRoles('Admin'), adminNotifs.get_admin_notifs);
+router.get('/display_forgot_password',    isAuthenticated, allowRoles('Admin'), adminNotifs.get_forgot_password);
+router.post('/delete_forgot_password',    isAuthenticated, allowRoles('Admin'), forgotPwd.post_delete_forgot_password);
+
+module.exports = router; 

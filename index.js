@@ -10,68 +10,94 @@ Functions:
 
 const express = require('express');
 const dotenv = require('dotenv');
+const path = require('path');
 const bodyParser = require('body-parser');
-const routes = require('./routes/routes.js');
 const hbs = require('hbs');
 const session = require('express-session');
-const database = require('./models/database.js');
+const MongoStore = require('connect-mongo');
+const helmet = require('helmet');
 const schedule = require('node-schedule');
 const axios = require('axios');
-const MongoStore = require('connect-mongo');
-const addData = require('./add_data.js');
-const addDataPayroll = require('./add_data_payroll.js');
-const path =require("path")
-const app = express();
+
+const routes = require('./routes/routes.js');
+const database = require('./models/database.js');
 
 dotenv.config();
-const port = process.env.PORT;
-const hostname = process.env.HOSTNAME;
-app.set('view engine', 'hbs');
 
+const app = express();
+const port = process.env.PORT || 3000;
+const hostname = process.env.HOSTNAME || 'localhost';
+
+/*---- templates ----*/
+app.set('view engine', 'hbs');
 const partialsPath = path.join(__dirname, "views/partials");
 hbs.registerPartials(partialsPath);
-
 hbs.registerHelper('eq', function (a, b){
     return a === b;
 });
 
+/*----- security headers -----*/
+app.use(helmet({ contentSecurityPolicy: false })); 
+app.disable('x-powered-by');
+
+/*----- parsers & static -----*/
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.json());
 app.use(express.static('public'));
 
+/*----- connect to db -----*/
 database.connect();
 
+/*----- session fail secure -----*/
+app.set('trust proxy', 1);
 app.use(session({
     secret: 'session-secret-key', // Replace with your secret key
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://Admin_Acc:6rtztqN8cgcS6uwg@payrollcluster.ho2w0w9.mongodb.net/'
+        mongoUrl: process.env.MONGO_URI,
+        collectionName: 'sessions'
     }),
     cookie: { 
         httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 24 * 60 * 60 * 1000
     }
 }));
 
+/*----- routes -----*/
 app.use('/', routes);
 
+/*----- weekly payroll -----*/
 //PST: Sunday 12am/ UTC: Saturday 4pm
 schedule.scheduleJob('0 0 * * 0', function(){
-    axios.post(`http://${hostname}:${port}/update_employee_payroll`)
-        .then(response => {
-            console.log(response.data);
-        })
-        .catch(error => {
-            console.error("Error Updating Payroll:", error);
+    //add a try catch for error handling
+    try{
+        axios.post(`http://${hostname}:${port}/update_employee_payroll`, null, {
+                headers: { 'x-cron-secret': process.env.CRON_SECRET }
         });
+
+        console.log('[CRON] Payroll update triggered.');
+    } catch (error){
+        console.error("Error Updating Payroll:", error);
+    }
 });
 
+/*----- ERROR 404 -----*/
 app.use(function(req, res){
     res.status(404).send('Error 404: Page Not Found');
 });
 
+/*----- Generic Error Handler -----*/
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send('Something went wrong.');
+});
+
 // addData.populateEmployees();
 // addDataPayroll.populate_payroll();
+
+/*----- start -----*/
 app.listen(port, hostname, function() {
     console.log(`Server running at http://${hostname}:${port}`);
 }); 
