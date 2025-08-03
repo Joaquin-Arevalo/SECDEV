@@ -36,6 +36,9 @@
         <div class="page-title title-wrapper" id="weekly-payroll" style="transform: translate(-10px, 3px)" onclick="navigateToWeeklyPayroll()">
             <h2>Weekly Payroll</h2>
         </div>
+        <div class="page-title title-wrapper" id="emp-task" style="transform: translate(-10px, 3px)" onclick="navigateToEmpTask()">
+            <h2>Employee Task</h2>
+        </div>
     </div>
     <div class="left-payroll admin-leftdash" style="width:97%; margin: 0; z-index: 1; transform:translateY(-3px)">
         <div class="admin-leftdash-top">  
@@ -236,6 +239,11 @@
     function navigateToWeeklyPayroll() {
         console.log('Weekly Payroll clicked');
         window.location.href = 'man_empman_payroll';
+    }
+
+    function navigateToEmpTask() {
+        console.log('Employee Task clicked');
+        window.location.href = 'man_emp_task';
     }
 </script>
 <script src="/js/man-weekly-payroll.js"></script>

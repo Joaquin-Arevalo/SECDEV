@@ -25,6 +25,7 @@ const emp_register_controllers = require('../controllers/emp-register-controller
 const manager_dash_logs_controllers = require('../controllers/manager-dash-logs-controller');
 const manager_empman_emprecs_controllers = require('../controllers/manager-empman-emprecs-controller');
 const manager_empman_payroll_controllers = require('../controllers/manager-empman-payroll-controller');
+const manager_task_controllers = require('../controllers/manager-task-controller');
 
 //for salary particulars page
 const employee_salary_particulars_controllers = require('../controllers/employee-salary-particulars-controller.js');
@@ -152,15 +153,28 @@ app.get('/manager_dashboard', initial_process, manager_access, manager_dash_logs
 app.get('/man_empman_emprecs', initial_process, manager_access, manager_empman_emprecs_controllers.get_emprecs);
 app.post('/display_specific_employee_records_man', initial_process, manager_access, manager_empman_emprecs_controllers.post_specific_emprecs);
 
-app.get('/man_salary_particulars', manager_salary_particulars_controllers.get_salary_particulars);
-app.get('/man_retrieve_employee_total_sp', manager_salary_particulars_controllers.get_emp_total);
-app.get('/man_salary_particulars_employee', manager_salary_particulars_controllers.get_salary_particulars_employee);
-app.post('/man_print_salary_particulars', manager_salary_particulars_controllers.post_print_salary_particulars);
+//this was added initial_process, manager_access, 
+app.get('/man_salary_particulars', initial_process, manager_access, manager_salary_particulars_controllers.get_salary_particulars);
+app.get('/man_retrieve_employee_total_sp', initial_process, manager_access, manager_salary_particulars_controllers.get_emp_total);
+app.get('/man_salary_particulars_employee', initial_process, manager_access, manager_salary_particulars_controllers.get_salary_particulars_employee);
+app.post('/man_print_salary_particulars', initial_process, manager_access, manager_salary_particulars_controllers.post_print_salary_particulars);
+//
 
 app.get('/man_empman_payroll', initial_process, manager_access, manager_empman_payroll_controllers.get_man_empman_payroll);
 app.get('/man_retrieve_employee_total_wp', initial_process, manager_access, manager_empman_payroll_controllers.get_emp_total);
 app.get('/man_retrieve_emp_wpay', initial_process, manager_access, manager_empman_payroll_controllers.get_emp_wpay);
 app.post('/man_update_payroll', initial_process, manager_access, manager_empman_payroll_controllers.post_update_payroll);
+
+app.get('/man_emp_task', initial_process, manager_access, manager_task_controllers.get_task);
+app.get('/man_employee_total', initial_process, manager_access, manager_task_controllers.get_emp_total);
+app.get('/man_specific_employee_task', initial_process, manager_access, manager_task_controllers.get_specific_emp_task);
+app.post('/man_assign_task', initial_process, manager_access, manager_task_controllers.post_register_task);
+
+
+
+
+
+
 
 // -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

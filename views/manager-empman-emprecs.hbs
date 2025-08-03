@@ -16,6 +16,12 @@
             <div class="page-title title-wrapper" id="weekly-payroll">
                 <h2>Weekly Payroll</h2>
             </div>
+            {{!-- <div class="page-title title-wrapper" id="emp-task" style="transform: translate(-10px, 3px)" onclick="navigateToEmpTask()">
+                <h2>Employee Task</h2>
+            </div> --}}
+            <div class="page-title title-wrapper" id="emp-task">
+                <h2>Employee Task</h2>
+            </div>
         </div>
         <div class="container" style="z-index: 1;">
             <div class="empman-header">
@@ -59,6 +65,11 @@
 
     document.getElementById('weekly-payroll').addEventListener('click', function() {
         window.location.href = 'man_empman_payroll';
+        console.log('Clicked');
+    });
+
+    document.getElementById('emp-task').addEventListener('click', function() {
+        window.location.href = 'man_emp_task';
         console.log('Clicked');
     });
 </script>

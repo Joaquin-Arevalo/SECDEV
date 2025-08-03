@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+    <link rel="icon" type="image/x-icon" href="/css/images/greenatwork-logo.png">
+    <script src="/js/script.js"></script>
+    
+</head>
+<body style="display: flex; flex-direction: row;">
+<div class = "popup" id="popup-2">    
+    <div class="overlay">
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup()">&times;</div>
+            <h1>Confirm Task Assignment</h1>
+                <span><p>Do you want to add this task?</p></span>
+            <div class="otp-button"><button id="task-button">Confirm</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class = "popup" id="popup-3">    
+    <div class="overlay">
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup2()">&times;</div>
+            <h1>New Task Has Been Added</h1>
+            <div class="otp-button"><button onclick="togglePopup2()">Confirm</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div style="margin:0; display: flex; flex-direction: column; width: 100%; background-color: var(--background);">
+    <div class="title-container">
+        <div class="page-title title-wrapper" id="emp-info" onclick="navigateToEmpInfo()">
+            <h2>Employee Information</h2>
+        </div>
+        <div class="page-title title-wrapper" id="weekly-payroll" style="transform: translate(-10px, 3px)" onclick="navigateToWeeklyPayroll()">
+            <h2>Weekly Payroll</h2>
+        </div>
+        <div class="page-title title-wrapper" id="emp-task" style="transform: translate(-10px, 3px)" onclick="navigateToEmpTask()">
+            <h2>Employee Task</h2>
+        </div>
+    </div>
+    <div class="left-payroll admin-leftdash" style="width:97%; margin: 0; z-index: 1; transform:translateY(-3px)">
+        <div class="admin-leftdash-top">  
+            <div class="empman-midhead" style="align-items: center;">
+                <div class="dropdown">
+                    <label>Employee:</label>
+                    <select id="emp-dropdown-id">
+                        <option id="current-emp-option">Select</option>
+                        {{#each emp_total}}
+                        <option>{{this.Email}}</option>
+                        {{/each}}
+                    </select>
+                </div>  
+            </div>   
+        </div>
+        <div id="weekly-payroll-container-id">
+            <table id="weekly-payroll-table-id">
+                <tr>
+                    <th>Task Name</th>
+                    <th>Task Description</th>
+                    <th>Assigned To</th>
+                    <th>Task Status</th>
+                    {{!-- completed or incomplete --}}
+                </tr>
+                {{#each r_tasks}}
+                <tr>
+                    <td>{{this.Task_Name}}</td>
+                    <td>{{this.Task_Description}}</td>
+                    <td>{{this.First_Name}} {{this.Last_Name}}</td>
+
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+
+        <div class="total-wkly-pay" style="margin: 2vh 2vh 2vh 2vh">
+                <h2>Employee Task</h2>
+        </div>
+        <div class="container">
+            <form id="task-register-form">
+                <div class="emp-info" style="font-weight:bold;">
+                        <p><span class="label">Task Name:</span> <span><input type="text" name="taskName" placeholder="Task Name" id="taskName"></span></p>
+                        <p><span class="label">Task Description:</span> <span><input type="text" name="taskDescription" placeholder="Task Description" id="taskDesc"></span></p>
+                        <p><span class="label" for="emp-dropdown-id-task">Employee:</span>
+                            <span>
+                                <select id="emp-dropdown-id-task" style="flex: 1; max-width: 250px;">
+                                    <option id="current-emp-option-task">Select</option>
+                                    {{#each emp_total}}
+                                    <option>{{this.Email}}</option>
+                                    {{/each}}
+                                </select>
+                            </span>
+                        </p>
+                    <div class="ad-left-btn">
+                        <button type="button"  class="ad-leftdash-btn" onclick="togglePopup()">
+                            <p>Assign Task</p>
+                        </button>
+                    </div>        
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{{>mansidenav}}
+<script>
+    function navigateToEmpInfo() {
+        console.log('Employee Information clicked');
+        window.location.href = 'man_empman_emprecs';
+    }
+
+    function navigateToWeeklyPayroll() {
+        console.log('Weekly Payroll clicked');
+        window.location.href = 'man_empman_payroll';
+    }
+
+    function navigateToEmpTask() {
+        console.log('Employee Task clicked');
+        window.location.href = 'man_emp_task';
+    }
+</script>
+<script src="/js/man-emp-task.js"></script>
+</body>
+</html>

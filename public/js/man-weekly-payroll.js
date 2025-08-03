@@ -109,7 +109,7 @@ function dropdown(){
     async function redirect_to_logs(event){
         event.preventDefault();
         
-        window.location.href = '/man_dashboard';
+        window.location.href = '/manager_dashboard';
     }
 
     emp_dropdown_select.addEventListener('change', function(){
