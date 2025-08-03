@@ -53,11 +53,12 @@ app.set('trust proxy', 1);
 app.use(session({
     secret: 'session-secret-key', // Replace with your secret key
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: true, //no session for anonymous users
     store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
+        mongoUrl: `mongodb+srv://secdev-admin:kj01i3hg890@secdevcluster.gbtvgtj.mongodb.net/`,
         collectionName: 'sessions'
     }),
+    //cookies
     cookie: { 
         httpOnly: true, 
         secure: process.env.NODE_ENV === 'production',

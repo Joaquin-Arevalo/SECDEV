@@ -6,7 +6,7 @@ Alternative CRUD operations for documents in the database
 
 const mongoose = require('mongoose');
 // const url = 'mongodb+srv://admin:index_zero@payroll.8an3brq.mongodb.net/';
-const url = 'mongodb+srv://secdev-admin:kj01i3hg890@secdevcluster.gbtvgtj.mongodb.net/';
+const url = `mongodb+srv://secdev-admin:kj01i3hg890@secdevcluster.gbtvgtj.mongodb.net/`
 
 const options = {
     useUnifiedTopology: true,

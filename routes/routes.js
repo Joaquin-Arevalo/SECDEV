@@ -19,18 +19,16 @@ const forgotPwd = require('../controllers/forgot-password-controller');
 const adminNotifs = require('../controllers/admin-notifs-controller');
 const registerCtl = require('../controllers/register-controller');
 
-// secdev ++
-const emp_register_controllers = require('../controllers/emp-register-controller');
-const manager_dash_logs_controllers = require('../controllers/manager-dash-logs-controller');
-const manager_empman_emprecs_controllers = require('../controllers/manager-empman-emprecs-controller');
-const manager_empman_payroll_controllers = require('../controllers/manager-empman-payroll-controller');
-const manager_task_controllers = require('../controllers/manager-task-controller');
-
 const empSP = require('../controllers/employee-salary-particulars-controller');
 const adminSP = require('../controllers/admin-salary-particulars-controller');
 
-//SECDEV ++
-const manager_salary_particulars_controllers = require('../controllers/manager-salary-particulars-controller.js');
+// secdev ++
+const emp_register = require('../controllers/emp-register-controller');
+const manLogs = require('../controllers/manager-dash-logs-controller');
+const manEmpRecs = require('../controllers/manager-empman-emprecs-controller');
+const manPayroll = require('../controllers/manager-empman-payroll-controller');
+const manTasks = require('../controllers/manager-task-controller');
+const manSP = require('../controllers/manager-salary-particulars-controller');
  
 const express = require('express');
 const router = express.Router();
@@ -40,11 +38,13 @@ router.use(express.json());
 
 const redirectByRole = (req, res) => {
   const t = req.session?.Employee_Type;
-  if (t === 'Admin') return res.redirect('/admin_dashboard');
+  if (t === 'Admin')   return res.redirect('/admin_dashboard');
+  if (t === 'Manager') return res.redirect('/manager_dashboard');
   if (t === 'Employee') return res.redirect('/employee_clockpage');
   if (t === 'Work From Home') return res.redirect('/work_from_home_clockpage');
   return res.redirect('/');
 };
+
 
 const isAuthenticated = (req, res, next) =>
   req.session?.Email ? next() : res.redirect('/');
@@ -59,6 +59,10 @@ const allowRoles = (...roles) => (req, res, next) =>
 router.get('/', isLoggedOut, controllers.get_index);
 router.post('/login_account', isLoggedOut, login.post_login);
 router.post('/add_forgot_password', isLoggedOut, forgotPwd.post_add_forgot_password);
+
+/* ---------- self registration [SECDEV] ---------- */
+router.get('/emp_register', isLoggedOut, emp_register.get_register);
+router.post('/emp_register_employee', isLoggedOut, emp_register.post_register);
 
 /* ---------- Session management ---------- */
 router.get('/logout', isAuthenticated, logout.get_logout);
@@ -169,5 +173,33 @@ router.post('/admin_update_payroll',               isAuthenticated, allowRoles('
 router.get('/admin_notifs',               isAuthenticated, allowRoles('Admin'), adminNotifs.get_admin_notifs);
 router.get('/display_forgot_password',    isAuthenticated, allowRoles('Admin'), adminNotifs.get_forgot_password);
 router.post('/delete_forgot_password',    isAuthenticated, allowRoles('Admin'), forgotPwd.post_delete_forgot_password);
+
+/* ------------ Manager-only (SECDEV) ------------ */
+router.get('/manager_dashboard', isAuthenticated, allowRoles('Manager'), manLogs.get_manager_dash_logs);
+
+/* ------------ Manager employee records (SECDEV) ------------ */
+router.get('/man_empman_emprecs', isAuthenticated, allowRoles('Manager'), manEmpRecs.get_emprecs);
+router.post('/display_specific_employee_records_man', isAuthenticated, allowRoles('Manager'), manEmpRecs.post_specific_emprecs);
+
+/* ------------ Manager salary particulars (SECDEV) ------------ */
+router.get('/man_salary_particulars', isAuthenticated, allowRoles('Manager'), manSP.get_salary_particulars);
+router.get('/man_retrieve_employee_total_sp', isAuthenticated, allowRoles('Manager'), manSP.get_emp_total);
+router.get('/man_salary_particulars_employee', isAuthenticated, allowRoles('Manager'), manSP.get_salary_particulars_employee);
+router.post('/man_print_salary_particulars', isAuthenticated, allowRoles('Manager'), manSP.post_print_salary_particulars);
+
+/* ------------ Manager payroll (SECDEV) ------------ */
+router.get('/man_empman_payroll', isAuthenticated, allowRoles('Manager'), manPayroll.get_man_empman_payroll);
+router.get('/man_retrieve_employee_total_wp', isAuthenticated, allowRoles('Manager'), manPayroll.get_emp_total);
+router.get('/man_retrieve_emp_wpay', isAuthenticated, allowRoles('Manager'), manPayroll.get_emp_wpay);
+router.post('/man_update_payroll', isAuthenticated, allowRoles('Manager'), manPayroll.post_update_payroll);
+
+/* ------------ Manager tasks (SECDEV) ------------ */
+router.get('/man_emp_task', isAuthenticated, allowRoles('Manager'), manTasks.get_task);
+router.get('/man_employee_total', isAuthenticated, allowRoles('Manager'), manTasks.get_emp_total);
+router.get('/man_specific_employee_task', isAuthenticated, allowRoles('Manager'), manTasks.get_specific_emp_task);
+router.post('/man_assign_task', isAuthenticated, allowRoles('Manager'), manTasks.post_register_task);
+router.post('/man_delete_task', isAuthenticated, allowRoles('Manager'), manTasks.delete_task);
+router.post('/man_complete_task', isAuthenticated, allowRoles('Manager'), manTasks.complete_task);
+router.post('/man_edit_task', isAuthenticated, allowRoles('Manager'), manTasks.edit_task);
 
 module.exports = router; 
