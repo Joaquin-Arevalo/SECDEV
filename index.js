@@ -45,7 +45,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://Admin_Acc:6rtztqN8cgcS6uwg@payrollcluster.ho2w0w9.mongodb.net/'
+        // mongoUrl: 'mongodb+srv://Admin_Acc:6rtztqN8cgcS6uwg@payrollcluster.ho2w0w9.mongodb.net/'
+        mongoUrl: 'mongodb+srv://secdev-admin:kj01i3hg890@secdevcluster.gbtvgtj.mongodb.net/'
     }),
     cookie: { 
         httpOnly: true, 
@@ -56,21 +57,21 @@ app.use(session({
 app.use('/', routes);
 
 //PST: Sunday 12am/ UTC: Saturday 4pm
-schedule.scheduleJob('0 0 * * 0', function(){
-    axios.post(`http://${hostname}:${port}/update_employee_payroll`)
-        .then(response => {
-            console.log(response.data);
-        })
-        .catch(error => {
-            console.error("Error Updating Payroll:", error);
-        });
-});
+// schedule.scheduleJob('0 0 * * 0', function(){
+//     axios.post(`http://${hostname}:${port}/update_employee_payroll`)
+//         .then(response => {
+//             console.log(response.data);
+//         })
+//         .catch(error => {
+//             console.error("Error Updating Payroll:", error);
+//         });
+// });
 
 app.use(function(req, res){
     res.status(404).send('Error 404: Page Not Found');
 });
 
-// addData.populateEmployees();
+// addData.populateEmployees(); //manual code based population of employees
 // addDataPayroll.populate_payroll();
 app.listen(port, hostname, function() {
     console.log(`Server running at http://${hostname}:${port}`);

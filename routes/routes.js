@@ -20,9 +20,18 @@ const admin_notifs_controllers = require('../controllers/admin-notifs-controller
 
 const register_controllers = require('../controllers/register-controller');
 
+// secdev ++
+const emp_register_controllers = require('../controllers/emp-register-controller');
+const manager_dash_logs_controllers = require('../controllers/manager-dash-logs-controller');
+const manager_empman_emprecs_controllers = require('../controllers/manager-empman-emprecs-controller');
+const manager_empman_payroll_controllers = require('../controllers/manager-empman-payroll-controller');
+
 //for salary particulars page
 const employee_salary_particulars_controllers = require('../controllers/employee-salary-particulars-controller.js');
 const admin_salary_particulars_controllers = require('../controllers/admin-salary-particulars-controller.js');
+
+//SECDEV ++
+const manager_salary_particulars_controllers = require('../controllers/manager-salary-particulars-controller.js');
  
 const express = require('express');
 const app = express();
@@ -66,19 +75,62 @@ function wfh_access(req, res, next){
     }
 }
 
+//og
+// function employee_wfh_access(req, res, next){
+//     if(req.session.Employee_Type === "Admin"){
+//         res.redirect('/admin_dashboard');
+//     }else{
+//         next();
+//     }
+// }
+
+// modified
 function employee_wfh_access(req, res, next){
-    if(req.session.Employee_Type === "Admin"){
-        res.redirect('/admin_dashboard');
+    if(req.session.Employee_Type === "Manager"){
+        res.redirect('/manager_dashboard');
     }else{
         next();
     }
 }
 
+//og
+// function admin_access(req, res, next){
+//     if(req.session.Employee_Type === "Employee"){
+//         res.redirect('/employee_clockpage');
+//     }else if(req.session.Employee_Type === "Work From Home"){
+//         res.redirect('/work_from_home_clockpage');
+//     }else{
+//         next();
+//     }
+// }
+
+//modified
 function admin_access(req, res, next){
     if(req.session.Employee_Type === "Employee"){
         res.redirect('/employee_clockpage');
     }else if(req.session.Employee_Type === "Work From Home"){
         res.redirect('/work_from_home_clockpage');
+    }else if(req.session.Employee_Type === "Manager"){
+        res.redirect('/manager_dashboard');
+    }else{
+        next();
+    }
+}
+
+//not sure
+function manager_access(req, res, next){
+    // if(req.session.Employee_Type === "Manager"){
+    //     res.redirect('/manager_dashboard');
+    // }else{
+    //     next();
+    // }
+
+    if(req.session.Employee_Type === "Employee"){
+        res.redirect('/employee_clockpage');
+    }else if(req.session.Employee_Type === "Work From Home"){
+        res.redirect('/work_from_home_clockpage');
+    }else if(req.session.Employee_Type === "Admin"){
+        res.redirect('/admin_dashboard');
     }else{
         next();
     }
@@ -89,6 +141,28 @@ app.get('/', must_be_logged_out, controllers.get_index);
 app.post('/add_forgot_password', must_be_logged_out, forgot_password_controllers.post_add_forgot_password);
 app.post('/login_account', must_be_logged_out, login_controllers.post_login);
 app.get('/logout', initial_process, logout_controllers.get_logout);
+
+//SECDEV ++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+app.get('/emp_register', must_be_logged_out, emp_register_controllers.get_register);
+app.post('/emp_register_employee', must_be_logged_out, emp_register_controllers.post_register);
+
+app.get('/manager_dashboard', initial_process, manager_access, manager_dash_logs_controllers.get_manager_dash_logs);
+// app.get('/retrieve_employee_summary', initial_process, manager_access, manager_dash_logs_controllers.get_employee_summary); //change into manager
+
+app.get('/man_empman_emprecs', initial_process, manager_access, manager_empman_emprecs_controllers.get_emprecs);
+app.post('/display_specific_employee_records_man', initial_process, manager_access, manager_empman_emprecs_controllers.post_specific_emprecs);
+
+app.get('/man_salary_particulars', manager_salary_particulars_controllers.get_salary_particulars);
+app.get('/man_retrieve_employee_total_sp', manager_salary_particulars_controllers.get_emp_total);
+app.get('/man_salary_particulars_employee', manager_salary_particulars_controllers.get_salary_particulars_employee);
+app.post('/man_print_salary_particulars', manager_salary_particulars_controllers.post_print_salary_particulars);
+
+app.get('/man_empman_payroll', initial_process, manager_access, manager_empman_payroll_controllers.get_man_empman_payroll);
+app.get('/man_retrieve_employee_total_wp', initial_process, manager_access, manager_empman_payroll_controllers.get_emp_total);
+app.get('/man_retrieve_emp_wpay', initial_process, manager_access, manager_empman_payroll_controllers.get_emp_wpay);
+app.post('/man_update_payroll', initial_process, manager_access, manager_empman_payroll_controllers.post_update_payroll);
+
+// -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //wfh routes access
 app.get('/work_from_home_clockpage', initial_process, employee_wfh_access, wfh_access, employee_clockpage_controllers.get_wfh_clockpage);
@@ -104,7 +178,7 @@ app.get('/employee_dashboard', initial_process, employee_wfh_access, employee_da
 app.post('/employee_time_in', initial_process, employee_wfh_access, employee_clockpage_controllers.post_employee_time_in);
 app.post('/employee_time_out', initial_process, employee_wfh_access, employee_clockpage_controllers.post_employee_time_out);
 app.post('/retrieve_employee_payroll',initial_process,  employee_wfh_access, employee_dashboard_controllers.get_employee_details);
-// app.get('/salary_particulars', initial_process, employee_wfh_access, employee_salary_particulars_controllers.get_salary_particulars)
+app.get('/salary_particulars', initial_process, employee_wfh_access, employee_salary_particulars_controllers.get_salary_particulars)
 
 //admin routes access
 app.get('/admin_dashboard', initial_process, admin_access, admin_dash_logs_controllers.get_admin_dash_logs);
