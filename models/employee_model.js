@@ -38,6 +38,16 @@ var employee_schema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    FailedAttempts: { 
+        type: Number, 
+        default: 0 
+    },
+    LockUntil: { 
+        type: Date, 
+        default: null 
+    }
+
+    },
     Password_Age: {
         type: Date,
         default: Date.now

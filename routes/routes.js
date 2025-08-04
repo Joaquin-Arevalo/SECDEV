@@ -29,10 +29,11 @@ const manEmpRecs = require('../controllers/manager-empman-emprecs-controller');
 const manPayroll = require('../controllers/manager-empman-payroll-controller');
 const manTasks = require('../controllers/manager-task-controller');
 const manSP = require('../controllers/manager-salary-particulars-controller');
+ const adminSecLogs = require('../controllers/admin-security-logs-controller');
 const empTasks = require('../controllers/employee-task-controller');
 const que = require('../controllers/question-controller');
 const cha = require('../controllers/change-controller');
- 
+
 const express = require('express');
 const router = express.Router();
 router.use(express.json());
@@ -213,6 +214,8 @@ router.post('/admin_update_payroll',               isAuthenticated, allowRoles('
 router.get('/admin_notifs',               isAuthenticated, allowRoles('Admin'), adminNotifs.get_admin_notifs);
 router.get('/display_forgot_password',    isAuthenticated, allowRoles('Admin'), adminNotifs.get_forgot_password);
 router.post('/delete_forgot_password',    isAuthenticated, allowRoles('Admin'), forgotPwd.post_delete_forgot_password);
+
+router.get('/admin_security_logs', isAuthenticated, allowRoles('Admin'), adminSecLogs.get_admin_security_logs);
 
 /* ------------ Manager-only (SECDEV) ------------ */
 router.get('/manager_dashboard', isAuthenticated, allowRoles('Manager'), manLogs.get_manager_dash_logs);
