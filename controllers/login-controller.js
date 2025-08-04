@@ -1,4 +1,5 @@
 const employee = require('../models/employee_model.js');
+const logger = require('../logger');
 
 const MAX_ATTEMPTS = 5;
 const LOCK_TIME_MS = 15 * 60 * 1000; // 15 minutes
@@ -11,6 +12,7 @@ const login_controller = {
       const user = await employee.findOne({ Email: email });
 
       if (!user) {
+        logger.logLoginFailure(email);
         return res.status(404).json({ message: "Incorrect Credentials!" });
       }
 
@@ -27,10 +29,13 @@ const login_controller = {
         if (user.FailedAttempts >= MAX_ATTEMPTS) {
           user.LockUntil = new Date(Date.now() + LOCK_TIME_MS);
           await user.save();
+
+          logger.logLoginFailure(email); //log lock out
           return res.status(403).json({ message: "Account locked due to too many failed attempts." });
         }
 
         await user.save();
+        logger.logLoginFailure(email); //log incorrect password
         return res.status(401).json({ message: "Incorrect Credentials!" });
       }
 
@@ -41,6 +46,8 @@ const login_controller = {
 
       req.session.Email = email;
       req.session.Employee_Type = user.Employee_Type;
+
+      logger.logLoginSuccess(email); //log successful login
 
       // Keep existing redirect logic
       if (user.Employee_Type === "Employee") {
