@@ -11,7 +11,7 @@ const database = require('../models/database.js');
 
 const admin_empman_payroll_controller = {
     get_admin_empman_payroll: function(req, res){
-        res.render("admin-empman-payroll");
+        res.render("admin-empman-payroll", { LCF: req.session.LCF});
     },
 
     get_emp_total: async function(req, res){
@@ -25,7 +25,7 @@ const admin_empman_payroll_controller = {
                 return emailA.localeCompare(emailB);
             });
 
-            res.render("admin-empman-payroll", {emp_total});
+            res.render("admin-empman-payroll", {emp_total, LCF: req.session.LCF});
         }catch(error){
             console.error("Error processing employee total: ", error);
             res.status(500).send("Internal Server Error!");
@@ -89,7 +89,7 @@ const admin_empman_payroll_controller = {
             emp_wpay.Sat_Minutes =  padZero(emp_wpay.Sat_Minutes.toString());
             emp_wpay.Sun_Minutes =  padZero(emp_wpay.Sun_Minutes.toString());
 
-            res.render("admin-empman-payroll", {emp_wpay, emp_total, Total_Hour_Rate, Total_Minute_Rate});
+            res.render("admin-empman-payroll", {emp_wpay, emp_total, Total_Hour_Rate, Total_Minute_Rate, LCF: req.session.LCF});
         }catch(error){
             console.error("Error processing weekly payroll: ", error);
             res.status(500).send("Internal Server Error!");

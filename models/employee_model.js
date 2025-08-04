@@ -37,7 +37,21 @@ var employee_schema = new mongoose.Schema({
     IsTimedIn: {
         type: Boolean,
         default: false
-    }
+    },
+    Password_Age: {
+        type: Date,
+        default: Date.now
+    },
+    Last_Successful_Login: {
+        type: Date
+    },
+    Security_Questions: {
+        type: Boolean,
+        default: false
+    },
+    Last_Password_Change: {
+        type: Date
+    },
 });
 
 module.exports = mongoose.model('employee', employee_schema);

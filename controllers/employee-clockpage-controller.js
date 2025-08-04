@@ -11,11 +11,11 @@ const database = require('../models/database.js');
 
 const employee_clockpage_controller = {
     get_employee_clockpage: function (req, res){
-        res.render("employee-clockpage", {email: req.session.Email, emp_type: req.session.Employee_type});
+        res.render("employee-clockpage", {email: req.session.Email, emp_type: req.session.Employee_type, LCF: req.session.LCF});
     },
 
     get_wfh_clockpage: function(req, res){
-        res.render("work-from-home-clockpage", {email: req.session.Email, emp_type: req.session.Employee_type});
+        res.render("work-from-home-clockpage", {email: req.session.Email, emp_type: req.session.Employee_type, LCF: req.session.LCF});
     },
 
     get_employee_time_in_status: async function(req, res){

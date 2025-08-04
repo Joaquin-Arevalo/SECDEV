@@ -7,7 +7,7 @@ const database = require('../models/database.js');
 
 const man_employee_salary_particulars_controllers = {
     get_salary_particulars: function(req, res){
-        res.render("man-salaryParticulars");
+        res.render("man-salaryParticulars", {LCF: req.session.LCF});
     },
 
     get_emp_total: async function(req, res){
@@ -21,7 +21,7 @@ const man_employee_salary_particulars_controllers = {
                 return emailA.localeCompare(emailB);
             });
 
-            res.render("man-salaryParticulars", {emp_total});
+            res.render("man-salaryParticulars", {emp_total, LCF: req.session.LCF});
         }catch(error){
             console.error("Error processing employee total: ", error);
             res.status(500).send("Internal Server Error!");
@@ -102,7 +102,7 @@ const man_employee_salary_particulars_controllers = {
             }
 
             res.render("man-salaryParticulars", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex, 
-                emp_rec, emp_pay, emp_total, Total_Basic_Hours, Total_Basic_Pay, Total_OT_Hours, Total_OT_Compensation, Total_Holiday_Hours, Total_Holiday_Pay});
+                emp_rec, emp_pay, emp_total, Total_Basic_Hours, Total_Basic_Pay, Total_OT_Hours, Total_OT_Compensation, Total_Holiday_Hours, Total_Holiday_Pay, LCF: req.session.LCF});
         }catch (error){
             console.error("Error processing employee details: ", error);
             res.status(500).send("Internal Server Error!");

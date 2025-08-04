@@ -29,13 +29,17 @@ document.addEventListener("DOMContentLoaded", function(){
             const data = await response.json();
 
             if(data.success){
-                if(data.type === "Employee"){
-                    window.location.href = '/employee_clockpage';
-                }else if (data.type === "Work From Home"){
-                    window.location.href = '/work_from_home_clockpage';
+                if(data.sec_check === false){
+                    window.location.href = '/question';
                 }else{
-                    window.location.href = '/admin_dashboard';
-                }    
+                    if(data.type === "Employee"){
+                        window.location.href = '/employee_clockpage';
+                    }else if (data.type === "Work From Home"){
+                        window.location.href = '/work_from_home_clockpage';
+                    }else{
+                        window.location.href = '/admin_dashboard';
+                    }   
+                } 
             }else{
                 error_message.textContent = data.message;
             }

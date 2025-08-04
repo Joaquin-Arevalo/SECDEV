@@ -9,7 +9,7 @@ const database = require('../models/database.js');
 
 const manager_dash_logs_controller = {
     get_manager_dash_logs: function(req, res){
-        res.render("manager-dash-logs");
+        res.render("manager-dash-logs", { LCF: req.session.LCF});
     },
 
     get_employee_summary: async function(req, res){
@@ -30,7 +30,7 @@ const manager_dash_logs_controller = {
             };
             const emp_sum = await database.findMany(payroll, query_days);
 
-            res.render("manager-dash-logs", {emp_sum, d_week: day_of_the_week});
+            res.render("manager-dash-logs", {emp_sum, d_week: day_of_the_week, LCF: req.session.LCF});
         }catch(error){
             console.error("Error processing employee summary: ", error);
             res.status(500).send("Internal Server Error!");

@@ -111,7 +111,6 @@ async function taskUpdate(){
         const taskName = document.getElementById("taskNameEdit").value;
         const taskDesc = document.getElementById("taskDescEdit").value;
         const taskId = document.getElementById("taskIdEdit").value;
-        console.log("taskId: ", taskId);
 
         if (employee === "Select" || !taskName || !taskDesc) {
             alert("Please complete all fields.");
@@ -225,7 +224,6 @@ function toggleEditPopup(btn) {
     if (btn) {
         const taskId = btn.dataset.taskId;
         document.getElementById("taskIdEdit").value = taskId;
-        console.log("taskId: ", taskId);
     }
 }
 

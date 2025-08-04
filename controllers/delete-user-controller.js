@@ -11,7 +11,7 @@ const database = require('../models/database.js');
 
 const delete_user_controller = {
     get_delete_user_page: function(req, res){
-        res.render("delete-user");
+        res.render("delete-user", { LCF: req.session.LCF});
     },
 
     get_delete_user: async function(req, res){
@@ -24,7 +24,7 @@ const delete_user_controller = {
         });
         try{
             
-            res.render("delete-user", {emp_emails}); 
+            res.render("delete-user", {emp_emails, LCF: req.session.LCF}); 
         }catch (error){
             console.error("Error processing employee summary: ", error);
             res.status(500).send("Internal Server Error!");
@@ -43,7 +43,7 @@ const delete_user_controller = {
         try {
             const emp_sum = await employee.findOne({ Email: email });
     
-            res.render("delete-user", {emp_sum, emp_emails});
+            res.render("delete-user", {emp_sum, emp_emails, LCF: req.session.LCF});
         } catch (error) {
             console.error("Error processing employee summary: ", error);
             res.status(500).send("Internal Server Error!");

@@ -6,6 +6,7 @@ Functions:
 
 const employee = require('../models/employee_model.js');
 const payroll = require('../models/payroll_model.js');
+const bcrypt = require('bcrypt');
 
 const emp_register_controller = {
     get_register: function(req, res){
@@ -22,15 +23,20 @@ const emp_register_controller = {
             return res.status(400).json({message: "Missing Password!"});
         }else{
             try{
+                const saltRounds = 10;
+                const hashedPassword = await bcrypt.hash(password, saltRounds);
+
                 const new_employee = new employee({
                     First_Name: firstName,
                     Last_Name: lastName,
                     Contact_Number: contactNumber,
                     Email: email,
-                    Password: password,
+                    Password: hashedPassword,
                     Address: address,
                     Employee_Type: employee_type,
-                    IsTimedIn: false
+                    IsTimedIn: false,
+                    Password_Age: new Date(),
+                    Security_Questions: false,
                 });
                 await new_employee.save();
                 if(employee_type === "Employee" || employee_type === "Work From Home"){

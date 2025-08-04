@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Questions</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+     <link rel="icon" type="image/x-icon" href="/css/images/greenatwork-logo.png">
+    <script src="/js/script.js"></script> 
+</head>
+<body style="padding:0;">
+
+    <div class = "popup" id="popup-2">    
+        <div class="overlay">
+            <div class="content">
+                <div class="close-btn" onclick="togglePopup()">&times;</div>
+                <h1>Confirm Password Change</h1>
+                    <span><p>Do you want to save the new password?</p></span>
+                <div class="otp-button"><button id="register-button">Confirm</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class = "popup" id="popup-3">    
+        <div class="overlay">
+            <div class="content">
+                <div class="close-btn" onclick="togglePopup2()">&times;</div>
+                <h1>New Password Has Been Saved</h1>
+                <p>You Will Now Be Redirected</p>
+                <div class="otp-button"><button onclick="togglePopup2()">Confirm</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="left-payroll admin-leftdash" style="background-color: var(--white-m); padding:0;">
+        <div class="container">
+            <div class="emp-info" style="font-weight:bold;">
+                    <!-- Placeholder info -->
+                    
+                    <p><span class="label">Question 1:</span> {{questionData.Question_1}} <span></p>
+                    <p><span class="label">Answer 1:</span> <span><input type="text" name="answerOne" placeholder="Answer" id="answerOne"></span></p>
+                    <p><span class="label">Question 2:</span> {{questionData.Question_2}} <span></p>
+                    <p><span class="label">Answer 2:</span> <span><input type="text" name="answerTwo" placeholder="Answer" id="answerTwo"></span></p>
+                
+                    <p><span class="label">Old Password:</span> <span><input type="text" name="currPass" placeholder="Input Current Password" id="currPass"></span></p>
+                    <p><span class="label">New Password:</span> <span><input type="text" name="newPass" placeholder="Input New Password" id="newPass"></span></p>
+                    <p><span class="label">Confirm New Password:</span> <span><input type="text" name="newPass2" placeholder="Input New Password" id="newPass2"></span></p>
+
+                <div class="ad-left-btn">
+                    <button type="button"  class="ad-leftdash-btn" onclick="togglePopup()">
+                        <p>Confirm Password Change</p>
+                    </button>
+                </div>        
+            </div>
+        </div>
+        </div>
+    </div>
+
+{{!-- sidenav --}}
+<script src="/js/change.js"></script>
+</body>
+</html>

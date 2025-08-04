@@ -19,7 +19,7 @@ const manager_empman_emprecs_controller = {
         });
 
     try{
-        res.render("manager-empman-emprecs", {emp_emails});
+        res.render("manager-empman-emprecs", {emp_emails, LCF: req.session.LCF});
     }catch (error){
         console.error("Error processing employee summary: ", error);
         res.status(500).send("Internal Server Error!");
@@ -40,7 +40,7 @@ const manager_empman_emprecs_controller = {
         try {
             const emp_sum = await employee.findOne({ Email: email });
     
-            res.render("manager-empman-emprecs", { emp_emails, emp_sum });
+            res.render("manager-empman-emprecs", { emp_emails, emp_sum , LCF: req.session.LCF});
         } catch (error) {
             console.error("Error processing employee summary: ", error);
             res.status(500).send("Internal Server Error!");

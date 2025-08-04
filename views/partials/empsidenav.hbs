@@ -1,12 +1,14 @@
 
     <div class="right-payroll right-emp-dash">
         <div class="admin-rightdash-top">
-            {{#if emp_rec.First_Name}}
+            {{#if emp_rec}}
                 <h1>Hello, <span>{{emp_rec.First_Name}}</span>!</h1>
                 <p>As of <span id="date">Monday, January 1, 2024</span></p> 
                 <p id="time">00:00:00</p>
             {{else}}
-                <h1>Hello!</h1>
+                <h1>Hello!</h1> 
+                <p>As of <span id="date">Monday, January 1, 2024</span></p> 
+                <p id="time">00:00:00</p>
             {{/if}}
         </div>
         <div class="ad-dash-spacer"></div>
@@ -20,12 +22,20 @@
                 <p><a style="color: var(--green-m)" href="/employee_dashboard">Employee Dashboard</a></p>
             </button>
             <button type="button" class="ad-rightdash-btn">
+                <i class="bi bi-list-task"></i>
+                <p><a style="color: var(--green-m)" href="/employee_task">Employee Task</a></p>
+            </button>
+            <button type="button" class="ad-rightdash-btn">
                 <i class="fi fi-rr-tax"></i>
                 <p><a style="color: var(--green-m)" href="/salary_particulars">Salary Particulars</a></p>
             </button>
         </div>
         <div class="admin-rightdash-bottom">
             <br><br><br>
-            <h2><a href="/logout" style="color: white;" >Log-Out</a></h2>   
+            <h2><a href="/logout" style="color: white;" >Log-Out</a></h2>
+            <p style="font-size: 2vh"><a href="/display_change">Change Password</a></p> 
+            {{#if LCF}}
+                <p style="font-size: 2vh">Last Successful Login: <span>{{LCF}}</span></p>
+            {{/if}}  
         </div>
     </div>

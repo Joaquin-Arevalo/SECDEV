@@ -29,6 +29,9 @@ const manEmpRecs = require('../controllers/manager-empman-emprecs-controller');
 const manPayroll = require('../controllers/manager-empman-payroll-controller');
 const manTasks = require('../controllers/manager-task-controller');
 const manSP = require('../controllers/manager-salary-particulars-controller');
+const empTasks = require('../controllers/employee-task-controller');
+const que = require('../controllers/question-controller');
+const cha = require('../controllers/change-controller');
  
 const express = require('express');
 const router = express.Router();
@@ -46,8 +49,27 @@ const redirectByRole = (req, res) => {
 };
 
 
-const isAuthenticated = (req, res, next) =>
-  req.session?.Email ? next() : res.redirect('/');
+// const isAuthenticated = (req, res, next) =>
+//   req.session?.Email ? next() : res.redirect('/');
+
+
+const isAuthenticated = (req, res, next) => {
+  const path = req.path;
+
+  if (!req.session?.Email) {
+    return res.redirect('/');
+  }
+
+  const bypassPaths = ['/question', '/save_question'];
+
+  if (req.session?.Security_Question === false && !bypassPaths.includes(path)) {
+    return res.redirect('/question');
+  }
+
+  next();
+};
+
+
 
 const isLoggedOut = (req, res, next) =>
   !req.session?.Email ? next() : redirectByRole(req, res);
@@ -59,6 +81,15 @@ const allowRoles = (...roles) => (req, res, next) =>
 router.get('/', isLoggedOut, controllers.get_index);
 router.post('/login_account', isLoggedOut, login.post_login);
 router.post('/add_forgot_password', isLoggedOut, forgotPwd.post_add_forgot_password);
+
+/* ---------- security questions [SECDEV] ---------- */
+router.get('/question', isAuthenticated, que.get_question);
+router.post('/save_question', isAuthenticated, que.post_question);
+
+/* ---------- password change [SECDEV] ---------- */
+router.get('/display_change', isAuthenticated, cha.get_question);
+router.post('/save_change', isAuthenticated, cha.post_change);
+
 
 /* ---------- self registration [SECDEV] ---------- */
 router.get('/emp_register', isLoggedOut, emp_register.get_register);
@@ -117,6 +148,15 @@ router.post('/retrieve_employee_payroll',
   allowRoles('Employee', 'Work From Home'),
   empDash.get_employee_details
 );
+router.get('/employee_task',
+    isAuthenticated,
+    allowRoles('Employee', 'Work From Home'),
+    empTasks.get_specific_emp_task
+)
+router.post('/emp_assign_task', isAuthenticated, allowRoles('Employee', 'Work From Home'), empTasks.post_register_task);
+router.post('/emp_delete_task', isAuthenticated, allowRoles('Employee', 'Work From Home'), empTasks.delete_task);
+router.post('/emp_complete_task', isAuthenticated, allowRoles('Employee', 'Work From Home'), empTasks.complete_task);
+router.post('/emp_edit_task', isAuthenticated, allowRoles('Employee', 'Work From Home'), empTasks.edit_task);
 
 /* ---------- Salary Particulars ---------- */
 router.get('/salary_particulars',

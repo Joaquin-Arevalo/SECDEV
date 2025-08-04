@@ -13,11 +13,11 @@ const employee_dashboard_controller = {
         employee_email = req.session.Email;
         try{
             const emp_rec = await database.findOne(employee, {Email: employee_email});
-            res.render("employee-dashboard", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex, emp_rec});
+            res.render("employee-dashboard", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex, emp_rec, LCF: req.session.LCF});
         }catch (err){
             console.error("Error processing employee details: ", err);
             res.status(500).send("Internal Server Error!");
-        }
+        } 
     },
 
     get_employee_details: async function (req, res){
@@ -79,7 +79,7 @@ const employee_dashboard_controller = {
             emp_det.Sun_Total_Pay = emp_det.Sun_Total_Pay.toFixed(2);
             emp_det.Weekly_Total_Pay = emp_det.Weekly_Total_Pay.toFixed(2);
         
-            res.render("employee-dashboard", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex, emp_det, emp_rec, Total_Hour_Rate, Total_Minute_Rate});
+            res.render("employee-dashboard", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex, emp_det, emp_rec, Total_Hour_Rate, Total_Minute_Rate, LCF: req.session.LCF});
         }catch(error){
             console.error("Error processing employee details: ", error);
             res.status(500).send("Internal Server Error!");

@@ -76,7 +76,7 @@ const employee_salary_particulars_controllers = {
             }
 
             res.render("employee-salaryParticulars", {email: req.session.Email, emp_type: req.session.Employee_type, ETI_weekdayIndex: req.session.ETI_weekdayIndex, 
-                emp_rec, emp_pay, Total_Basic_Hours, Total_Basic_Pay, Total_OT_Hours, Total_OT_Compensation, Total_Holiday_Hours, Total_Holiday_Pay});
+                emp_rec, emp_pay, Total_Basic_Hours, Total_Basic_Pay, Total_OT_Hours, Total_OT_Compensation, Total_Holiday_Hours, Total_Holiday_Pay, LCF: req.session.LCF});
         }catch (error){
             console.error("Error processing employee details: ", error);
             res.status(500).send("Internal Server Error!");

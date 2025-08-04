@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Questions</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+     <link rel="icon" type="image/x-icon" href="/css/images/greenatwork-logo.png">
+    <script src="/js/script.js"></script> 
+</head>
+<body style="padding:0;">
+
+    <div class = "popup" id="popup-2">    
+        <div class="overlay">
+            <div class="content">
+                <div class="close-btn" onclick="togglePopup()">&times;</div>
+                <h1>Confirm Security Questions</h1>
+                    <span><p>Do you want to save these security question and answer?</p></span>
+                <div class="otp-button"><button id="register-button">Confirm</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class = "popup" id="popup-3">    
+        <div class="overlay">
+            <div class="content">
+                <div class="close-btn" onclick="togglePopup2()">&times;</div>
+                <h1>Security Question Has Been Saved</h1>
+                <h1>You Will Now Be Redirected</h1>
+                <div class="otp-button"><button onclick="togglePopup2()">Confirm</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="left-payroll admin-leftdash" style="background-color: var(--white-m); padding:0;">
+        <div class="container">
+            <div class="emp-info" style="font-weight:bold;">
+                    <!-- Placeholder info -->
+                    
+                    <p><span class="label">Question 1:</span> <span>
+                        <select name="questionOne" id="question-one" class="role-dropdown">                        
+                            <option>What city were you born in?</option>
+                            <option>What is your oldest sibling’s middle name?</option>
+                            <option>What was the first concert you attended?</option>
+                            <option>What was the make and model of your first car?</option>
+                            <option>In what city or town did your parents meet?</option>
+                            <option>What is the name of your first childhood pet?</option>
+                            <option>hat is the middle name of your oldest cousin?</option>
+                        </select></span>
+                    </p>
+                    <p><span class="label">Answer:</span> <span><input type="text" name="answerOne" placeholder="Answer" id="answerOne"></span></p>
+                    <p><span class="label">Question 2:</span> <span>
+                        <select name="questionTwo" id="question-two" class="role-dropdown">                        
+                            <option>What city were you born in?</option>
+                            <option>What is your oldest sibling’s middle name?</option>
+                            <option>What was the first concert you attended?</option>
+                            <option>What was the make and model of your first car?</option>
+                            <option>In what city or town did your parents meet?</option>
+                            <option>What is the name of your first childhood pet?</option>
+                            <option>hat is the middle name of your oldest cousin?</option>
+                        </select></span>
+                    </p>
+                    <p><span class="label">Answer:</span> <span><input type="text" name="answerTwo" placeholder="Answer" id="answerTwo"></span></p
+                <div class="ad-left-btn">
+                    <button type="button"  class="ad-leftdash-btn" onclick="togglePopup()">
+                        <p>Confirm Security Questions</p>
+                    </button>
+                </div>        
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+<script src="/js/question.js"></script>
+</body>
+</html>

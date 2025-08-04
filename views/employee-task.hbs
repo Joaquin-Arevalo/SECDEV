@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+    <link rel="icon" type="image/x-icon" href="/css/images/greenatwork-logo.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <script src="/js/script.js"></script>
+    
+</head>
+<body style="display: flex; flex-direction: row;">
+{{!-- add task --}}
+<div class = "popup" id="popup-2">    
+    <div class="overlay">
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup()">&times;</div>
+            <h1>Confirm Task Assignment</h1>
+                <span><p>Do you want to add this task?</p></span>
+            <div class="otp-button"><button id="task-button">Confirm</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class = "popup" id="popup-3">    
+    <div class="overlay">
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup2()">&times;</div>
+            <h1>New Task Has Been Added</h1>
+            <div class="otp-button"><button onclick="togglePopup2()">Confirm</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{!-- edit task --}}
+<div class = "popup" id="popup-4">    
+    <div class="overlay">
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup3()">&times;</div>
+            <h1>Confirm Task Changes</h1>
+                <span><p>Do you want to continue with the task changes?</p></span>
+            <div class="otp-button"><button id="edit-task-button">Confirm</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class = "popup" id="popup-5">    
+    <div class="overlay">
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup4()">&times;</div>
+            <h1>Task Has Been Updated</h1>
+            <div class="otp-button"><button onclick="togglePopup4()">Confirm</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{!-- edit task --}}
+<div class = "popup" id="popup-man-edit">    
+    <div class="overlay">
+        <div class="content" style="width: 1200px; max-width: 90%; height: 500px; max-height: 80%; padding: 30px; border-radius: 10px;">
+
+            <div class="close-btn" onclick="toggleEditPopup()">&times;</div>
+            <h1>Edit Task</h1>
+
+            <form id="task-edit-form">
+                <div class="emp-info" style="font-weight:bold;">
+                        <p><span class="label">Task Name:</span> <span><input type="text" name="taskNameEdit" placeholder="Task Name" id="taskNameEdit"></span></p>
+                        <p><span class="label">Task Description:</span> <span><input type="text" name="taskDescEdit" placeholder="Task Description" id="taskDescEdit"></span></p>
+                        <input type="hidden" id="taskIdEdit" name="taskIdEdit">
+                    <div class="ad-left-btn">
+                        <button type="button"  class="ad-leftdash-btn" onclick="togglePopup3(); toggleEditPopup()">
+                            <p>Save Changes</p>
+                        </button>
+                    </div>        
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Popup Form for Assigning Task -->
+<div class="popup" id="popup-task-form">
+    <div class="overlay">
+        <div class="content" style="width: 1200px; max-width: 90%; height: 500px; max-height: 80%; padding: 30px; border-radius: 10px;">
+            <div class="close-btn" onclick="toggleTaskFormPopup()">&times;</div>
+            <h1>Assign Task</h1>
+            <form id="task-register-form">
+                <div class="emp-info" style="font-weight:bold;">
+                    <p>
+                        <span class="label">Task Name:</span>
+                        <span><input type="text" name="taskName" placeholder="Task Name" id="taskName"></span>
+                    </p>
+                    <p>
+                        <span class="label">Task Description:</span>
+                        <span><input type="text" name="taskDescription" placeholder="Task Description" id="taskDesc"></span>
+                    </p>
+                    <div class="ad-left-btn">
+                        <button type="button" class="ad-leftdash-btn" onclick="togglePopup(); toggleTaskFormPopup()">
+                            <p>Assign Task</p>
+                        </button>
+                    </div>        
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div style="margin:0; display: flex; flex-direction: column; width: 100%; background-color: var(--background);">
+    <div class="left-payroll admin-leftdash" style="width:97%; margin: 0; z-index: 1; transform:translateY(-3px); display: flex; flex-direction: column; gap: 30px; padding-bottom: 30px;">
+
+        <div class="container" style="z-index: 1;">
+            <div class="admin-leftdash-top">  
+                <div class="empman-midhead" style="align-items: center;">
+                    <button onclick="toggleTaskFormPopup()" class="ad-leftdash-btn">
+                        Assign Task
+                    </button>
+                </div>   
+            </div>
+            <div id="weekly-payroll-container-id" style="height: 500px; overflow-y: auto;">
+                <table id="weekly-payroll-table-id">
+                    <tr>
+                        <th>Task Name</th>
+                        <th>Task Description</th>
+                        <th>Assigned To</th>
+                        <th>Task Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    {{#each r_tasks}}
+                    <tr>
+                        <td>{{this.Task_Name}}</td>
+                        <td>{{this.Task_Description}}</td>
+                        <td>{{this.First_Name}} {{this.Last_Name}}</td>
+                        <td>{{lookup ../statusList @index}}</td>
+                        <td>
+                            {{#if this.Task_isCompleted}}
+                            <button type="button" class="delete-task-btn" data-task-id="{{this._id}}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <button type="button" class="edit-task-btn" data-task-id="{{this._id}}" onclick="toggleEditPopup(this)">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button type="button" class="complete-task-btn" data-task-id="{{this._id}}" disabled>
+                                <i class="bi bi-check2-square"></i>
+                            </button>
+                            {{else}}
+                            <button type="button" class="delete-task-btn" data-task-id="{{this._id}}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <button type="button" class="edit-task-btn" data-task-id="{{this._id}}" onclick="toggleEditPopup(this)">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button type="button" class="complete-task-btn" data-task-id="{{this._id}}">
+                                <i class="bi bi-check2-square"></i>
+                            </button>
+                            {{/if}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </table>
+            </div>
+        </div>
+    </div>   
+</div>
+
+{{>empsidenav}}
+<script src="/js/employee-task.js"></script>
+</body>
+</html>

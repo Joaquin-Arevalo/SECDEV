@@ -9,7 +9,7 @@ const database = require('../models/database.js');
 
 const admin_notifs_controller = {
     get_admin_notifs: function (req, res){
-        res.render("admin-notifs");
+        res.render("admin-notifs", {LCF: req.session.LCF});
     },
 
     get_forgot_password: async function (req, res){
@@ -17,7 +17,7 @@ const admin_notifs_controller = {
             var emp_forgot_password = await database.findMany(forgot_password);
             emp_forgot_password.sort((a, b) => a.Forgot_Password_Number - b.Forgot_Password_Number);
 
-            res.render("admin-notifs", {emp_forgot_password});
+            res.render("admin-notifs", {emp_forgot_password, LCF: req.session.LCF});
         }catch(error){
             console.error("Error processing forgot password: ", error);
             res.status(500).send("Internal Server Error!");

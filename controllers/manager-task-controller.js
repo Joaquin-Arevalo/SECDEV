@@ -11,7 +11,7 @@ const database = require('../models/database.js');
 
 const manager_task_controller = {
     get_task: function(req, res){
-        res.render('manager-empman-task');
+        res.render('manager-empman-task', { LCF: req.session.LCF});
     }, 
 
     get_emp_total: async function(req, res){
@@ -25,7 +25,7 @@ const manager_task_controller = {
                 return emailA.localeCompare(emailB);
             });
 
-            res.render("manager-empman-task", {emp_total});
+            res.render("manager-empman-task", {emp_total, LCF: req.session.LCF});
         }catch(error){
             console.error("Error processing employee total: ", error);
             res.status(500).send("Internal Server Error!");
@@ -67,7 +67,7 @@ const manager_task_controller = {
             });
 
             // Render with all data
-            res.render("manager-empman-task", {r_tasks, emp_total, statusList});
+            res.render("manager-empman-task", {r_tasks, emp_total, statusList, LCF: req.session.LCF});
 
         } catch (error) {
             console.error("Error fetching specific employee tasks:", error);
@@ -104,7 +104,7 @@ const manager_task_controller = {
             }
         } catch (error) {
             console.error(error);
-            res.status(500).json({ success: false, message: "Registration Controller Error!" });
+            res.status(500).json({ success: false, message: "Server Error!" });
         }
     },
 
