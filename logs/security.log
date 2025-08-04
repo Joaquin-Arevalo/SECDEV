@@ -1,0 +1,6 @@
+[2025-08-04T00:48:28.967Z] LOGIN SUCCESS - jane.smith@example.com
+[2025-08-04T00:55:28.104Z] LOGIN SUCCESS - john.doe@example.com
+[2025-08-04T00:55:33.388Z] OTP GENERATED for john.doe@example.com
+[2025-08-04T00:55:46.600Z] OTP GENERATED for john.doe@example.com
+[2025-08-04T00:56:17.128Z] LOGIN SUCCESS - jane.smith@example.com
+[2025-08-04T01:03:08.819Z] LOGIN SUCCESS - jane.smith@example.com
