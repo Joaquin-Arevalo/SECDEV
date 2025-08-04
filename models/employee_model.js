@@ -45,10 +45,7 @@ var employee_schema = new mongoose.Schema({
     LockUntil: { 
         type: Date, 
         default: null 
-    }
-
-    },
-    Password_Age: {
+    }, Password_Age: {
         type: Date,
         default: Date.now
     },

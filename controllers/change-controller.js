@@ -21,7 +21,7 @@ const change_controller = {
                 return res.status(404).send("Server Error.");
             }
 
-            res.render('change', {employeeData, questionData, LCF: req.session.LCF});
+            res.render('change', {employeeData, questionData, LCF: req.session.LCF, empType: req.session.Employee_Type});
         } catch (error) {
             console.error("Error in get_question:", error);
             res.status(500).send("Server error.");
@@ -50,12 +50,12 @@ const change_controller = {
             const isMatchA1 = await bcrypt.compare(A1, user_exists_q.Answer_1);
             const isMatchA2 = await bcrypt.compare(A2, user_exists_q.Answer_2);
 
-            if(!isMatchCP || isMatchA1 || isMatchA2){
-                return res.status(404).json({message: "Incorrect Credentials!"});
+            if(!isMatchCP || !isMatchA1 || !isMatchA2){
+                return res.status(404).json({message: "Incorrect Credentials! 1"});
             }
 
             if(NP !== NP2){
-                return res.status(404).json({message: "Incorrect Credentials!"});
+                return res.status(404).json({message: "Incorrect Credentials! 2"});
             }
 
             const saltRounds = 10;

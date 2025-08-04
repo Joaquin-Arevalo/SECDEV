@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var login_button_submit = document.getElementById("login-button");
     login_button_submit.addEventListener('click', login_function);
 
-    async function login_function(event){
+    async function login_function(event){ 
         event.preventDefault();
 
         var email_input = document.getElementById("email").value;
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function(){
             }
         }catch(error){
             console.error(error);
-            error_message.textContent = "Login Controller Error";
+            error_message.textContent = "Server Error";
         }
     } 
     
