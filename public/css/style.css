@@ -1104,3 +1104,26 @@ body{
 .complete-task-btn:hover {
   color: #449d44;
 }
+.register-btn {
+    width: 50%;
+    max-width: 300px;
+    padding: 18px 24px;
+    font-size: 12dp;
+    font-weight: bold;
+    background-color: var(--green-m);
+    color: var(--white-m);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    margin: -20px auto;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+    background-color: var(--green-d);
+}
+
+.register-btn:active {
+    background-color: var(--gray);
+}
